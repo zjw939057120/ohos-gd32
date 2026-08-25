@@ -47,6 +47,7 @@ board_cflags = [
     "-Wall",
     "-DGD32F470",
     "-DGD32F470ZI",
+    "-DGD32F470_HXTAL_8M",
 ]
 
 board_cxx_flags = board_cflags
