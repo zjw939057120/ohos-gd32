@@ -12,18 +12,6 @@
 # limitations under the License.
 
 
-import("//kernel/liteos_m/liteos.gni")
-
-module_name = get_path_info(rebase_path("."), "name")
-kernel_module(module_name) {
-  include_dirs = [   "inc/" ,
-                "device/board/GigaDevice/gd32f470vg/sdk/systick.h"
-                 ]
-
-  cflags = [ "-Wall", "-Werror"]
-  
-  sources = [ 
-    "w25q64_test.c",
-    "src/bsp_spi.c"
-  ]
-}
+config BOARD_GD32F470ZG
+    bool "select board gd32f470zg"
+    depends on SOC_GD32F470ZG

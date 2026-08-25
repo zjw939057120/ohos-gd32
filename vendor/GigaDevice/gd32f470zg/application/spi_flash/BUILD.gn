@@ -17,13 +17,13 @@ import("//kernel/liteos_m/liteos.gni")
 module_name = get_path_info(rebase_path("."), "name")
 kernel_module(module_name) {
   include_dirs = [   "inc/" ,
-                "device/board/GigaDevice/gd32f470vg/sdk/systick.h"
+                "device/board/GigaDevice/gd32f470zg/sdk/systick.h"
                  ]
 
   cflags = [ "-Wall", "-Werror"]
   
   sources = [ 
-    "sht20_test.c",
-    "src/bsp_iic.c"
+    "w25q64_test.c",
+    "src/bsp_spi.c"
   ]
 }

@@ -12,6 +12,6 @@
 # limitations under the License.
 
 
-config BOARD_GD32F470VG
-    bool "select board gd32f470vg"
-    depends on SOC_GD32F470VG
+config BOARD_GD32F470ZI
+    bool "select board gd32f470zi"
+    depends on SOC_GD32F470ZI

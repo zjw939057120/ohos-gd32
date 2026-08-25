@@ -16,13 +16,13 @@ import("//kernel/${ohos_kernel_type}/liteos.gni")
 module_name = get_path_info(rebase_path("."), "name")
 module_group(module_name) {
   modules = []
-  if (defined(LOSCFG_BOARD_GD32F470VI)){
+  if (defined(LOSCFG_BOARD_GD32F470ZI)){
     modules += ["components/drivers"]
-    modules += ["gd32f470vi"]
+    modules += ["gd32f470zi"]
   }
-  if (defined(LOSCFG_BOARD_GD32F470VG)){
+  if (defined(LOSCFG_BOARD_GD32F470ZG)){
     modules += ["components/drivers"]
-    modules += ["gd32f470vg"]
+    modules += ["gd32f470zg"]
   }
 
   modules += [

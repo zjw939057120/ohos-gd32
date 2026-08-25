@@ -14,7 +14,7 @@
 import("//kernel/liteos_m/liteos.gni")
 module_name = get_path_info(rebase_path("."), "name")
 module_group(module_name) {
-  if (defined(LOSCFG_BOARD_GD32F470VI)){
+  if (defined(LOSCFG_BOARD_GD32F470ZI)){
     modules = [
       "uart",
       "littlefs_sfud",
@@ -22,7 +22,7 @@ module_group(module_name) {
     ]
   }
 
-  if (defined(LOSCFG_BOARD_GD32F470VG)){
+  if (defined(LOSCFG_BOARD_GD32F470ZG)){
     modules = [
       "uart",
       "littlefs_sfud",

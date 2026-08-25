@@ -11,6 +11,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-config BOARD_GD32F470VG
-    bool "open the macro LOSCFG_BOARD_GD32F470VG in the board"
-    depends on SOC_GD32F470VG
+
+import("//kernel/liteos_m/liteos.gni")
+
+module_name = get_path_info(rebase_path("."), "name")
+kernel_module(module_name) {
+  include_dirs = [   "inc/" ,
+                "device/board/GigaDevice/gd32f470zg/sdk/systick.h"
+                 ]
+
+  cflags = [ "-Wall", "-Werror"]
+  
+  sources = [ 
+    "sht20_test.c",
+    "src/bsp_iic.c"
+  ]
+}

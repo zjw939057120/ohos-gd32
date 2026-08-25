@@ -22,8 +22,8 @@ rsource "*/Kconfig.liteos_m.soc"
 endif # SOC_COMPANY_GD32
 
 
-menu "GD32F470VI  adapter Enable"
-depends on SOC_GD32F470VI
+menu "GD32F470ZI  adapter Enable"
+depends on SOC_GD32F470ZI
 
 config ETHERNET_ENABLE
     bool "Enable etnernet"
@@ -39,8 +39,8 @@ config FILE_SYSTEM_TEST
 
 endmenu
 
-menu "GD32F470VG  adapter Enable"
-depends on SOC_GD32F470VG
+menu "GD32F470ZG  adapter Enable"
+depends on SOC_GD32F470ZG
 
 config ETHERNET_ENABLE
     bool "Enable etnernet"

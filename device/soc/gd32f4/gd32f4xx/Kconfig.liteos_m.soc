@@ -14,10 +14,10 @@ choice
     prompt "GD32F4XX series SoC"
     depends on SOC_SERIES_GD32F4XX
 
-config SOC_GD32F470VI
-    bool "SoC GD32F470VI"
+config SOC_GD32F470ZI
+    bool "SoC GD32F470ZI"
 
-config SOC_GD32F470VG
-    bool "SoC GD32F470VG"
+config SOC_GD32F470ZG
+    bool "SoC GD32F470ZG"
 
 endchoice

@@ -37,7 +37,7 @@ int lfs_read(int partition, UINT32 *offset, void *buf, UINT32 size);
 int lfs_write(int partition, UINT32 *offset, const void *buf, UINT32 size);
 int lfs_erase(int partition, UINT32 offset, UINT32 size);
 
-#if (defined GD32F470VI)
+#if (defined GD32F470ZI)
 struct littlefs_cfg g_lfs_cfg[] = {
     [0] = {
         .cfg = {
