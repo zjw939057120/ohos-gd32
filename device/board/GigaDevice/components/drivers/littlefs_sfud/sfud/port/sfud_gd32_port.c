@@ -41,8 +41,8 @@
 #include <assert.h>
 #include "systick.h"
 
-#define  SPI_FLASH_CS_LOW()         gpio_bit_reset(GPIOA,GPIO_PIN_4)
-#define  SPI_FLASH_CS_HIGH()        gpio_bit_set(GPIOA,GPIO_PIN_4)
+#define  SPI_FLASH_CS_LOW()         gpio_bit_reset(GPIOD,GPIO_PIN_2)
+#define  SPI_FLASH_CS_HIGH()        gpio_bit_set(GPIOD,GPIO_PIN_2)
 #define  WRITE                      0x02     /* write to memory instruction */
 #define  QUADWRITE                  0x32     /* quad write to memory instruction */
 #define  WRSR                       0x01     /* write status register instruction */
@@ -115,16 +115,16 @@ void sfud_log_info(const char *format, ...) {
 static uint8_t spi_flash_send_byte(uint8_t byte)
 {
     /* loop while data register in not emplty */
-    while(RESET == spi_i2s_flag_get(SPI0,SPI_FLAG_TBE));
+    while(RESET == spi_i2s_flag_get(SPI2,SPI_FLAG_TBE));
 
-    /* send byte through the SPI0 peripheral */
-    spi_i2s_data_transmit(SPI0,byte);
+    /* send byte through the SPI2 peripheral */
+    spi_i2s_data_transmit(SPI2,byte);
 
     /* wait to receive a byte */
-    while(RESET == spi_i2s_flag_get(SPI0,SPI_FLAG_RBNE));
+    while(RESET == spi_i2s_flag_get(SPI2,SPI_FLAG_RBNE));
 
     /* return the byte read from the SPI bus */
-    return(spi_i2s_data_receive(SPI0));
+    return(spi_i2s_data_receive(SPI2));
 }
 
 static void spi_flash_page_write(const uint8_t* pbuffer, uint16_t num_byte_to_write)
@@ -182,26 +182,26 @@ static void spi_flash_init(void)
 {
     spi_parameter_struct spi_init_struct;
 
-    rcu_periph_clock_enable(RCU_GPIOA);
-    rcu_periph_clock_enable(RCU_GPIOB);
-    rcu_periph_clock_enable(RCU_SPI0);
+    rcu_periph_clock_enable(RCU_GPIOC);
+    rcu_periph_clock_enable(RCU_GPIOD);
+    rcu_periph_clock_enable(RCU_SPI2);
 
-    gpio_af_set(GPIOA, GPIO_AF_5, GPIO_PIN_5|GPIO_PIN_6);
-    gpio_af_set(GPIOB, GPIO_AF_5, GPIO_PIN_5);
+    /* SPI2 GPIO: SCK=PC10, MISO=PC11, MOSI=PC12, AF6 for SPI2 */
+    gpio_af_set(GPIOC, GPIO_AF_6, GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12);
 
-    gpio_mode_set(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_PIN_5|GPIO_PIN_6);
-    gpio_mode_set(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_PIN_5);
+    gpio_mode_set(GPIOC, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12);
 
-    gpio_output_options_set(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_25MHZ, GPIO_PIN_5|GPIO_PIN_6);
+    /* SCK / MOSI as push-pull output */
+    gpio_output_options_set(GPIOC, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_10|GPIO_PIN_12);
 
-    /* SPI5_CS(GPIO pin configuration */
-    gpio_mode_set(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO_PIN_4);
-    gpio_output_options_set(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_4);
+    /* SPI2_CS(GPIO pin configuration */
+    gpio_mode_set(GPIOD, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP, GPIO_PIN_2);
+    gpio_output_options_set(GPIOD, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_2);
 
     /* chip select invalid */
     SPI_FLASH_CS_HIGH();
 
-    /* SPI0 parameter config */
+    /* SPI2 parameter config */
     spi_init_struct.trans_mode           = SPI_TRANSMODE_FULLDUPLEX;
     spi_init_struct.device_mode          = SPI_MASTER;
     spi_init_struct.frame_size           = SPI_FRAMESIZE_8BIT;
@@ -209,16 +209,10 @@ static void spi_flash_init(void)
     spi_init_struct.nss                  = SPI_NSS_SOFT;
     spi_init_struct.prescale             = SPI_PSC_32;
     spi_init_struct.endian               = SPI_ENDIAN_MSB;
-    spi_init(SPI0, &spi_init_struct);
+    spi_init(SPI2, &spi_init_struct);
 
-    /* set crc polynomial */
-    spi_crc_polynomial_set(SPI0,7);
-
-    /* quad wire SPI_IO2 and SPI_IO3 pin output enable */
-    // qspi_io23_output_enable(SPI0);
-
-    /* enable SPI0 */
-    spi_enable(SPI0);
+    /* enable SPI2 */
+    spi_enable(SPI2);
 }
 
 
