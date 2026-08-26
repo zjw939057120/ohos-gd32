@@ -23,30 +23,95 @@
 #include "los_compiler.h"
 #include "los_event.h"
 #include "los_interrupt.h"
+#include "sys_gpio.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+// RS485_1 USART0 PB6,PB7,AP7
+#define RS485_1_NUMBER                          USART0
+#define RS485_1_RCU                             RCU_USART0
+#define RS485_1_IRQ                             USART0_IRQn
+#define RS485_1_BAUD                            (9600U)
 
-#define UART_NUMBER                     UART7
-#define UART_RCU                        RCU_UART7
-#define UART_IRQ                        UART7_IRQn
-#define UART_BAUD                       (115200U)
+#define RS485_1_GPIO_TXD_RCU                    RCU_GPIOB
+#define RS485_1_GPIO_TXD_PORT                   GPIOB
+#define RS485_1_GPIO_TXD_PIN                    GPIO_PIN_6
+#define RS485_1_GPIO_TXD_AF                     GPIO_AF_7
 
-#define GPIO_RXD_RCU                    RCU_GPIOE
-#define GPIO_RXD_PORT                   GPIOE
-#define GPIO_RXD_PIN                    GPIO_PIN_0
-#define GPIO_RXD_AF                     GPIO_AF_8
+#define RS485_1_GPIO_RXD_RCU                    RCU_GPIOB
+#define RS485_1_GPIO_RXD_PORT                   GPIOB
+#define RS485_1_GPIO_RXD_PIN                    GPIO_PIN_7
+#define RS485_1_GPIO_RXD_AF                     GPIO_AF_7
 
-#define GPIO_TXD_RCU                    RCU_GPIOE
-#define GPIO_TXD_PORT                   GPIOE
-#define GPIO_TXD_PIN                    GPIO_PIN_1
-#define GPIO_TXD_AF                     GPIO_AF_8
+// RS485_2 USART2 PB10,PB11,AP7
+#define RS485_2_NUMBER                          USART2
+#define RS485_2_RCU                             RCU_USART2
+#define RS485_2_IRQ                             USART2_IRQn
+#define RS485_2_BAUD                            (9600U)
+
+#define RS485_2_GPIO_TXD_RCU                    RCU_GPIOB
+#define RS485_2_GPIO_TXD_PORT                   GPIOB
+#define RS485_2_GPIO_TXD_PIN                    GPIO_PIN_10
+#define RS485_2_GPIO_TXD_AF                     GPIO_AF_7
+
+#define RS485_2_GPIO_RXD_RCU                    RCU_GPIOB
+#define RS485_2_GPIO_RXD_PORT                   GPIOB
+#define RS485_2_GPIO_RXD_PIN                    GPIO_PIN_11
+#define RS485_2_GPIO_RXD_AF                     GPIO_AF_7
+
+// RS485_3 USART5 PC6,PC7,AF8
+#define RS485_3_NUMBER                          USART5
+#define RS485_3_RCU                             RCU_USART5
+#define RS485_3_IRQ                             USART5_IRQn
+#define RS485_3_BAUD                            (9600U)
+
+#define RS485_3_GPIO_TXD_RCU                    RCU_GPIOC
+#define RS485_3_GPIO_TXD_PORT                   GPIOC
+#define RS485_3_GPIO_TXD_PIN                    GPIO_PIN_6
+#define RS485_3_GPIO_TXD_AF                     GPIO_AF_8
+
+#define RS485_3_GPIO_RXD_RCU                    RCU_GPIOC
+#define RS485_3_GPIO_RXD_PORT                   GPIOC
+#define RS485_3_GPIO_RXD_PIN                    GPIO_PIN_7
+#define RS485_3_GPIO_RXD_AF                     GPIO_AF_8
+
+// RS485_1_LED PA10
+#define RS485_1_LED_GPIO_RCU        RCU_GPIOA
+#define RS485_1_LED_GPIO_PORT		GPIOA
+#define RS485_1_LED_PIN				GPIO_PIN_10
+// RS485_2_LED PC8
+#define RS485_2_LED_GPIO_RCU        RCU_GPIOC
+#define RS485_2_LED_GPIO_PORT		GPIOC
+#define RS485_2_LED_PIN				GPIO_PIN_8
+// RS485_3_LED PA11
+#define RS485_3_LED_GPIO_RCU        RCU_GPIOA
+#define RS485_3_LED_GPIO_PORT		GPIOA
+#define RS485_3_LED_PIN				GPIO_PIN_11
+// RS485_1_EN PB9
+#define RS485_1_EN_GPIO_RCU         RCU_GPIOB
+#define RS485_1_EN_GPIO_PORT        GPIOB
+#define RS485_1_EN_GPIO_PIN			GPIO_PIN_9
+// RS485_2_EN PB8
+#define RS485_2_EN_GPIO_RCU         RCU_GPIOB
+#define RS485_2_EN_GPIO_PORT        GPIOB
+#define RS485_2_EN_GPIO_PIN			GPIO_PIN_8
+// RS485_3_EN PD7
+#define RS485_3_EN_GPIO_RCU         RCU_GPIOD
+#define RS485_3_EN_GPIO_PORT        GPIOD
+#define RS485_3_EN_GPIO_PIN			GPIO_PIN_7
+
 
 void uart_init(void);
 void uart_irq_register(void);
 
-void uart0_send_data(uint8_t *data, int len);
+void rs485_1_send_data(uint8_t *data, int len);
+void rs485_2_send_data(uint8_t *data, int len);
+void rs485_3_send_data(uint8_t *data, int len);
+
+void rs485_1_send_string(uint8_t *data);
+void rs485_2_send_string(uint8_t *data);
+void rs485_3_send_string(uint8_t *data);
 
 extern INT32 UartGetc(VOID);
 extern EVENT_CB_S g_shellInputEvent;

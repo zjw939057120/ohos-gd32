@@ -18,7 +18,7 @@ module_group(module_name) {
     modules = [
       "uart",
       "littlefs_sfud",
-      "sys_led",
+      "sys_gpio",
     ]
   }
 
@@ -26,7 +26,7 @@ module_group(module_name) {
     modules = [
       "uart",
       "littlefs_sfud",
-      # "sys_led",
+      "sys_gpio",
     ]
   }
 }

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <ohos_init.h>
 #include "los_task.h"
-#include "sys_led.h"
+#include "sys_gpio.h"
 
 
 #define TASK_STACK_SIZE     4096
@@ -10,10 +10,10 @@
 VOID sysled_task(VOID)
 {
     while (1) {
-        system_led_on();
+		led_on(RUNSTA_LED_INDEX);
         LOS_TaskDelay(1000);
 
-        system_led_off();
+		led_off(RUNSTA_LED_INDEX);
         LOS_TaskDelay(1000);
     }
 }
@@ -23,8 +23,6 @@ VOID sysled_task_handler(VOID)
     UINT32 ret;
     UINT32 g_task_id;
     TSK_INIT_PARAM_S g_task = {0};
-
-    system_led_init();
 
     g_task.pfnTaskEntry = (TSK_ENTRY_FUNC)sysled_task;
     g_task.uwStackSize = TASK_STACK_SIZE;

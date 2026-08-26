@@ -15,30 +15,64 @@
 
 #include "uart.h"
 
-void uart0_send_byte(uint8_t ch)
-{
-	usart_data_transmit(UART_NUMBER, (uint8_t)ch);
-    while(RESET == usart_flag_get(UART_NUMBER, USART_FLAG_TBE));
-}
-
-void uart0_send_data(uint8_t *data, int len)
+void rs485_1_send_data(uint8_t *data, int len)
 {
 	int i;
+    // 切换到发送模式
+	rs485_1_en(true);
 	for(i = 0; i < len; i++)
 	{
-		uart0_send_byte(data[i]);
+        usart_data_transmit(RS485_1_NUMBER, (uint8_t)data[i]);
+        while(RESET == usart_flag_get(RS485_1_NUMBER, USART_FLAG_TBE));
 	}
+	// 切换到接收模式
+	rs485_1_en(false);
 }
 
-void uart0_send_string(uint8_t *str)
+void rs485_2_send_data(uint8_t *data, int len)
 {
-	uint8_t *p = str;
-	while(*p)
+	int i;
+	// 切换到发送模式
+	rs485_2_en(true);
+	for(i = 0; i < len; i++)
 	{
-		uart0_send_byte(*p);
-		p++;
+        usart_data_transmit(RS485_2_NUMBER, (uint8_t)data[i]);
+        while(RESET == usart_flag_get(RS485_2_NUMBER, USART_FLAG_TBE));
 	}
+	// 切换到接收模式
+	rs485_2_en(false);
 }
+
+void rs485_3_send_data(uint8_t *data, int len)
+{
+	int i;
+	// 切换到接收模式
+	rs485_3_en(false);
+	for(i = 0; i < len; i++)
+	{
+        usart_data_transmit(RS485_3_NUMBER, (uint8_t)data[i]);
+        while(RESET == usart_flag_get(RS485_3_NUMBER, USART_FLAG_TBE));
+	}
+	// 切换到接收模式
+	rs485_3_en(false);
+}
+
+void rs485_1_send_string(uint8_t *data)
+{
+    rs485_1_send_data(data, strlen(data));
+}
+
+void rs485_2_send_string(uint8_t *data)
+{
+    rs485_2_send_data(data, strlen(data));
+}
+
+void rs485_3_send_string(uint8_t *data)
+{
+    rs485_3_send_data(data, strlen(data));
+}
+
+
 
 #if (LOSCFG_USE_SHELL == 1)
 #define RX_BUF_SIZE                     128
@@ -57,12 +91,44 @@ INT32 UartGetc(VOID)
 }
 #endif
 
-void UART7_IRQHandler(void)
+void RS485_1_IRQHandler(void)
 {
-    if(usart_flag_get(UART_NUMBER, USART_FLAG_RBNE) != RESET)    //判断是否接收中断标志位置位
+    if(usart_flag_get(RS485_1_NUMBER, USART_FLAG_RBNE) != RESET)    //判断是否接收中断标志位置位
     {      
-        usart_flag_clear(UART_NUMBER, USART_FLAG_RBNE);
-        uint8_t c = usart_data_receive(UART_NUMBER);    //将接收到的数据存入buf    
+        usart_flag_clear(RS485_1_NUMBER, USART_FLAG_RBNE);
+        uint8_t c = usart_data_receive(RS485_1_NUMBER);    //将接收到的数据存入buf    
+    }
+    else if(usart_flag_get(RS485_1_NUMBER, USART_FLAG_IDLE) != RESET)
+    {
+        // 清空空闲中断标志位
+        usart_flag_get(RS485_1_NUMBER, USART_FLAG_IDLE);
+        usart_data_receive(RS485_1_NUMBER);
+        rs485_1_send_string("IDLE\n");
+    }
+}
+
+void RS485_2_IRQHandler(void)
+{
+    if(usart_flag_get(RS485_2_NUMBER, USART_FLAG_RBNE) != RESET)    //判断是否接收中断标志位置位
+    {      
+        usart_flag_clear(RS485_2_NUMBER, USART_FLAG_RBNE);
+        uint8_t c = usart_data_receive(RS485_2_NUMBER);    //将接收到的数据存入buf
+    }
+    else if(usart_flag_get(RS485_2_NUMBER, USART_FLAG_IDLE) != RESET)
+    {
+        // 清空空闲中断标志位
+        usart_flag_get(RS485_2_NUMBER, USART_FLAG_IDLE);
+        usart_data_receive(RS485_2_NUMBER);
+        rs485_2_send_string("IDLE\n");
+    }
+}
+
+void RS485_3_IRQHandler(void)
+{
+    if(usart_flag_get(RS485_3_NUMBER, USART_FLAG_RBNE) != RESET)    //判断是否接收中断标志位置位
+    {      
+        usart_flag_clear(RS485_3_NUMBER, USART_FLAG_RBNE);
+        uint8_t c = usart_data_receive(RS485_3_NUMBER);    //将接收到的数据存入buf    
 #if (LOSCFG_USE_SHELL == 1)
         rx_buf[rx_index++] = c;
         rx_index %= RX_BUF_SIZE;
@@ -75,55 +141,156 @@ void UART7_IRQHandler(void)
     }
 }
 
-void uart_irq_register(void)
+void rs485_1_irq_register(void)
 {
     /* USART 中断配置 */
-    nvic_irq_enable(UART_IRQ, 1, 0);
+    nvic_irq_enable(RS485_1_IRQ, 1, 0);
     /* 使能串口接收中断 */
-	usart_interrupt_enable(UART_NUMBER, USART_INT_RBNE);
+	usart_interrupt_enable(RS485_1_NUMBER, USART_INT_RBNE);
+    /* 使能空闲中断 */
+    usart_interrupt_enable(RS485_1_NUMBER, USART_INT_IDLE);
+
+    int ret = LOS_HwiCreate(RS485_1_IRQ, 0, 0, (HWI_PROC_FUNC)RS485_1_IRQHandler, NULL);  /* 中断号 优先级 中断模式 处理函数 传入参数 */
+    if (ret != LOS_OK) {
+            printf("%s:%d Interrupt Create fail! ret=%x  RS485_1_IRQ=%d\n", __FILE__, __LINE__, ret, RS485_1_IRQ);
+    }
+}
+
+void rs485_2_irq_register(void)
+{
+    /* USART 中断配置 */
+    nvic_irq_enable(RS485_2_IRQ, 1, 0);
+    /* 使能串口接收中断 */
+	usart_interrupt_enable(RS485_2_NUMBER, USART_INT_RBNE);
+    /* 使能空闲中断 */
+    usart_interrupt_enable(RS485_2_NUMBER, USART_INT_IDLE);
+
+    int ret = LOS_HwiCreate(RS485_2_IRQ, 0, 0, (HWI_PROC_FUNC)RS485_2_IRQHandler, NULL);  /* 中断号 优先级 中断模式 处理函数 传入参数 */
+    if (ret != LOS_OK) {
+            printf("%s:%d Interrupt Create fail! ret=%x  RS485_2_IRQ=%d\n", __FILE__, __LINE__, ret, RS485_2_IRQ);
+    }
+}
+
+void rs485_3_irq_register(void)
+{
+    /* USART 中断配置 */
+    nvic_irq_enable(RS485_3_IRQ, 1, 0);
+    /* 使能串口接收中断 */
+	usart_interrupt_enable(RS485_3_NUMBER, USART_INT_RBNE);
 
 #if (LOSCFG_USE_SHELL == 1)
-    int ret = LOS_HwiCreate(UART_IRQ, 0, 0, (HWI_PROC_FUNC)UART7_IRQHandler, NULL);  /* 中断号 优先级 中断模式 处理函数 传入参数 */
+    int ret = LOS_HwiCreate(RS485_3_IRQ, 0, 0, (HWI_PROC_FUNC)RS485_3_IRQHandler, NULL);  /* 中断号 优先级 中断模式 处理函数 传入参数 */
     if (ret != LOS_OK) {
-            printf("%s:%d Interrupt Create fail! ret=%x  USART0_IRQn=%d\n", __FILE__, __LINE__, ret, UART_IRQ);
+            printf("%s:%d Interrupt Create fail! ret=%x  RS485_3_IRQ=%d\n", __FILE__, __LINE__, ret, RS485_3_IRQ);
     }
 #endif
 }
-int __io_putchar(int ch)
-{
-	usart_data_transmit(UART_NUMBER, (uint8_t)ch);
-    while(RESET == usart_flag_get(UART_NUMBER, USART_FLAG_TBE));
 
-    return ch;
+void uart_irq_register(void)
+{
+    //注册RS485中断
+    rs485_1_irq_register();
+    rs485_2_irq_register();
+    rs485_3_irq_register();
 }
-void uart_init(void)
+
+void rs485_1_init(void)
 {
 	//使能 GPIO 时钟源
-    rcu_periph_clock_enable(GPIO_RXD_RCU);
-    rcu_periph_clock_enable(GPIO_TXD_RCU);
+    rcu_periph_clock_enable(RS485_1_GPIO_RXD_RCU);
+    rcu_periph_clock_enable(RS485_1_GPIO_TXD_RCU);
 
-    //使能 USART0 时钟源
-    rcu_periph_clock_enable(UART_RCU);
+    //使能 USART 时钟源
+    rcu_periph_clock_enable(RS485_1_RCU);
 
     /* 复用引脚为 USARTx_Tx */
-    gpio_af_set(GPIO_RXD_PORT, GPIO_RXD_AF, GPIO_TXD_PIN);
+    gpio_af_set(RS485_1_GPIO_RXD_PORT, RS485_1_GPIO_RXD_AF, RS485_1_GPIO_TXD_PIN);
 
     /* 复用引脚为 USARTx_Rx */
-    gpio_af_set(GPIO_TXD_PORT, GPIO_TXD_AF, GPIO_RXD_PIN);
+    gpio_af_set(RS485_1_GPIO_TXD_PORT, RS485_1_GPIO_TXD_AF, RS485_1_GPIO_RXD_PIN);
 
     /* 设置引脚为上拉复用 */
-    gpio_mode_set(GPIO_TXD_PORT, GPIO_MODE_AF, GPIO_PUPD_PULLUP, GPIO_TXD_PIN);
-    gpio_output_options_set(GPIO_TXD_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, GPIO_TXD_PIN);
+    gpio_mode_set(RS485_1_GPIO_TXD_PORT, GPIO_MODE_AF, GPIO_PUPD_PULLUP, RS485_1_GPIO_TXD_PIN);
+    gpio_output_options_set(RS485_1_GPIO_TXD_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, RS485_1_GPIO_TXD_PIN);
 
     /* 设置引脚为上拉复用 */
-    gpio_mode_set(GPIO_RXD_PORT, GPIO_MODE_AF, GPIO_PUPD_PULLUP, GPIO_RXD_PIN);
-    gpio_output_options_set(GPIO_RXD_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, GPIO_RXD_PIN);
+    gpio_mode_set(RS485_1_GPIO_RXD_PORT, GPIO_MODE_AF, GPIO_PUPD_PULLUP, RS485_1_GPIO_RXD_PIN);
+    gpio_output_options_set(RS485_1_GPIO_RXD_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, RS485_1_GPIO_RXD_PIN);
 
     /* USART 配置 */
-    usart_deinit(UART_NUMBER);
-    usart_baudrate_set(UART_NUMBER, UART_BAUD);
-    usart_receive_config(UART_NUMBER, USART_RECEIVE_ENABLE);
-    usart_transmit_config(UART_NUMBER, USART_TRANSMIT_ENABLE);
-    usart_enable(UART_NUMBER);
+    usart_deinit(RS485_1_NUMBER);
+    usart_baudrate_set(RS485_1_NUMBER, RS485_1_BAUD);
+    usart_receive_config(RS485_1_NUMBER, USART_RECEIVE_ENABLE);
+    usart_transmit_config(RS485_1_NUMBER, USART_TRANSMIT_ENABLE);
+    usart_enable(RS485_1_NUMBER);
 }
 
+void rs485_2_init(void)
+{
+	//使能 GPIO 时钟源
+    rcu_periph_clock_enable(RS485_2_GPIO_RXD_RCU);
+    rcu_periph_clock_enable(RS485_2_GPIO_TXD_RCU);
+
+    //使能 USART 时钟源
+    rcu_periph_clock_enable(RS485_2_RCU);
+
+    /* 复用引脚为 USARTx_Tx */
+    gpio_af_set(RS485_2_GPIO_RXD_PORT, RS485_2_GPIO_RXD_AF, RS485_2_GPIO_TXD_PIN);
+
+    /* 复用引脚为 USARTx_Rx */
+    gpio_af_set(RS485_2_GPIO_TXD_PORT, RS485_2_GPIO_TXD_AF, RS485_2_GPIO_RXD_PIN);
+
+    /* 设置引脚为上拉复用 */
+    gpio_mode_set(RS485_2_GPIO_TXD_PORT, GPIO_MODE_AF, GPIO_PUPD_PULLUP, RS485_2_GPIO_TXD_PIN);
+    gpio_output_options_set(RS485_2_GPIO_TXD_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, RS485_2_GPIO_TXD_PIN);
+
+    /* 设置引脚为上拉复用 */
+    gpio_mode_set(RS485_2_GPIO_RXD_PORT, GPIO_MODE_AF, GPIO_PUPD_PULLUP, RS485_2_GPIO_RXD_PIN);
+    gpio_output_options_set(RS485_2_GPIO_RXD_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, RS485_2_GPIO_RXD_PIN);
+
+    /* USART 配置 */
+    usart_deinit(RS485_2_NUMBER);
+    usart_baudrate_set(RS485_2_NUMBER, RS485_2_BAUD);
+    usart_receive_config(RS485_2_NUMBER, USART_RECEIVE_ENABLE);
+    usart_transmit_config(RS485_2_NUMBER, USART_TRANSMIT_ENABLE);
+    usart_enable(RS485_2_NUMBER);
+}
+
+void rs485_3_init(void)
+{
+	//使能 GPIO 时钟源
+    rcu_periph_clock_enable(RS485_3_GPIO_RXD_RCU);
+    rcu_periph_clock_enable(RS485_3_GPIO_TXD_RCU);
+
+    //使能 USART 时钟源
+    rcu_periph_clock_enable(RS485_3_RCU);
+
+    /* 复用引脚为 USARTx_Tx */
+    gpio_af_set(RS485_3_GPIO_RXD_PORT, RS485_3_GPIO_RXD_AF, RS485_3_GPIO_TXD_PIN);
+
+    /* 复用引脚为 USARTx_Rx */
+    gpio_af_set(RS485_3_GPIO_TXD_PORT, RS485_3_GPIO_TXD_AF, RS485_3_GPIO_RXD_PIN);
+
+    /* 设置引脚为上拉复用 */
+    gpio_mode_set(RS485_3_GPIO_TXD_PORT, GPIO_MODE_AF, GPIO_PUPD_PULLUP, RS485_3_GPIO_TXD_PIN);
+    gpio_output_options_set(RS485_3_GPIO_TXD_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, RS485_3_GPIO_TXD_PIN);
+
+    /* 设置引脚为上拉复用 */
+    gpio_mode_set(RS485_3_GPIO_RXD_PORT, GPIO_MODE_AF, GPIO_PUPD_PULLUP, RS485_3_GPIO_RXD_PIN);
+    gpio_output_options_set(RS485_3_GPIO_RXD_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, RS485_3_GPIO_RXD_PIN);
+
+    /* USART 配置 */
+    usart_deinit(RS485_3_NUMBER);
+    usart_baudrate_set(RS485_3_NUMBER, RS485_3_BAUD);
+    usart_receive_config(RS485_3_NUMBER, USART_RECEIVE_ENABLE);
+    usart_transmit_config(RS485_3_NUMBER, USART_TRANSMIT_ENABLE);
+    usart_enable(RS485_3_NUMBER);
+}
+
+void uart_init(void)
+{
+    //初始化RS485
+    rs485_1_init();
+    rs485_2_init();
+    rs485_3_init();
+}
