@@ -61,7 +61,7 @@ OF SUCH DAMAGE.
 
 #if defined (GD32F470)
 #undef HXTAL_VALUE
-#if defined (DGD32F470_HXTAL_8M)
+#if defined (GD32F470_HXTAL_8M)
 #define HXTAL_VALUE    ((uint32_t)8000000)
 #else
 #define HXTAL_VALUE    ((uint32_t)25000000)

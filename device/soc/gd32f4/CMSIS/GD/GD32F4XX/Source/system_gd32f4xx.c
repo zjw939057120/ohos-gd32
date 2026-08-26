@@ -59,7 +59,7 @@
 
 /* 从上方选择合适的晶振配置和主频配置 */
 #if defined (GD32F470)
-#if defined (DGD32F470_HXTAL_8M)
+#if defined (GD32F470_HXTAL_8M)
 #define __SYSTEM_CLOCK_240M_PLL_8M_HXTAL        (uint32_t)(240000000)
 #else
 #define __SYSTEM_CLOCK_240M_PLL_25M_HXTAL        (uint32_t)(240000000)
