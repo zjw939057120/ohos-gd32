@@ -31,10 +31,6 @@ void enet_gpio_config(void)
     rcu_periph_clock_enable(RCU_GPIOH);
     rcu_periph_clock_enable(RCU_GPIOI);
 
-    gpio_af_set(GPIOA, GPIO_AF_0, GPIO_PIN_8);
-    gpio_mode_set(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_PIN_8);
-    gpio_output_options_set(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_MAX, GPIO_PIN_8);
-
     /* enable SYSCFG clock */
     rcu_periph_clock_enable(RCU_SYSCFG);
 

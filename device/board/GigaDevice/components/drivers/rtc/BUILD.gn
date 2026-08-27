@@ -17,7 +17,6 @@ module_name = get_path_info(rebase_path("."), "name")
 kernel_module(module_name) {
   sources = [
     "rtc_adapter.c",
-     "common_time.c",
   ]
 }
 

@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2026 zhangyao
- *
+ * Copyright (c) 2023-2023 Huawei Device Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,202 +13,205 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
+ #include <stdio.h>
 #include "gd32f4xx.h"
+#include "rtc_adapter.h"
 #include "los_interrupt.h"
 #include "rtc_time_hook.h"
-#include "common_time.h"
+#include <time.h>
+#include <sys/times.h>
 
-/* 使用外部晶振作为RTC时钟源 */
-#define CONFIG_RTC_CLOCK_SOURCE_LXTAL		1
+#define RTC_CLOCK_SOURCE_LXTAL
+#define BKP_VALUE    0x32F1
 
-#if (CONFIG_RTC_CLOCK_SOURCE_LXTAL)
-#define prescaler_s 0xFF
-#define prescaler_a 0x7F
-#else
-#define prescaler_s 0x13F
-#define prescaler_a 0x63
-#endif
+rtc_parameter_struct rtc_initpara;
+__IO uint32_t prescaler_a = 0, prescaler_s = 0;
 
-/* 北京时间, TZ时域 CST-8 */
-#define TZ_VAL 	(-8 * 60 * 60) 
+void rtc_setup(void);
+void rtc_show_time(void);
+uint8_t usart_input_threshold(uint32_t value);
+void rtc_pre_config(void);
 
-// 定义备份寄存器用途
-#define RTC_BKP_MAGIC 	RTC_BKP0 // 存储魔数
-#define RTC_BKP_CENTURY RTC_BKP1 // 存储世纪
-#define BKP_MAGIC_VALUE 0xA5A5A5A5
-
-#define BCD2DEC(val) 	(((val) >> 4) * 10 + ((val)&0x0F))
-#define DEC2BCD(val) 	(((val) / 10) << 4 | ((val) % 10))
-
-
-static int rtc_check_magic(void)
+/*!
+    \brief      init_rtc_hw function
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+int init_rtc_hw(void)
 {
-	return (RTC_BKP_MAGIC == BKP_MAGIC_VALUE);
+	/* enable access to RTC registers in Backup domain */
+    rcu_periph_clock_enable(RCU_PMU);
+    pmu_backup_write_enable();
+
+    rtc_pre_config();
+
+    /* check if RTC has aready been configured */
+    if (BKP_VALUE != RTC_BKP0){
+        rtc_setup();
+    }else{
+        /* detect the reset source */
+        if (RESET != rcu_flag_get(RCU_FLAG_PORRST)){
+            printf("power on reset occurred....\n\r");
+        }else if (RESET != rcu_flag_get(RCU_FLAG_EPRST)){
+            printf("external reset occurred....\n\r");
+        }
+        printf("no need to configure RTC....\n\r");
+
+        rtc_show_time();
+    }
+
+    rcu_all_reset_flag_clear();
 }
 
-static uint32_t rtc_get_century(void)
+/*!
+    \brief      RTC configuration function
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void rtc_pre_config(void)
 {
-	uint32_t century = 0;
+    #if defined (RTC_CLOCK_SOURCE_IRC32K)
+          rcu_osci_on(RCU_IRC32K);
+          rcu_osci_stab_wait(RCU_IRC32K);
+          rcu_rtc_clock_config(RCU_RTCSRC_IRC32K);
 
-	unsigned int intSave = LOS_IntLock();
-	if (rtc_check_magic())
-		century = (RTC_BKP_CENTURY >= 19) ? RTC_BKP_CENTURY : 0;
-	LOS_IntRestore(intSave);
+          prescaler_s = 0x13F;
+          prescaler_a = 0x63;
+    #elif defined (RTC_CLOCK_SOURCE_LXTAL)
+          rcu_osci_on(RCU_LXTAL);
+          rcu_osci_stab_wait(RCU_LXTAL);
+          rcu_rtc_clock_config(RCU_RTCSRC_LXTAL);
 
-	return century;
+          prescaler_s = 0xFF;
+          prescaler_a = 0x7F;
+    #else
+    #error RTC clock source should be defined.
+    #endif /* RTC_CLOCK_SOURCE_IRC32K */
+
+    rcu_periph_clock_enable(RCU_RTC);
+    rtc_register_sync_wait();
 }
 
-static void rtc_save_century(uint32_t century)
+/*!
+    \brief      use hyperterminal to setup RTC time and alarm
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void rtc_setup(void)
 {
-	if (century < 19) {
-		printf("** rtc_save_century: invalid century value(%d)\r\n", (int)century);
-		return;
+    /* setup RTC time value */
+
+    rtc_initpara.factor_asyn = prescaler_a;
+    rtc_initpara.factor_syn = prescaler_s;
+    rtc_initpara.year = DEC2BCD(26);
+    rtc_initpara.month = DEC2BCD(8);
+    rtc_initpara.day_of_week = RTC_THURSDAY;
+    rtc_initpara.date = DEC2BCD(27);
+    rtc_initpara.display_format = RTC_24HOUR;
+    rtc_initpara.am_pm = RTC_AM;
+
+	rtc_initpara.hour = DEC2BCD(15);
+	rtc_initpara.minute = DEC2BCD(59);
+	rtc_initpara.second = DEC2BCD(59);
+
+    /* RTC current time configuration */
+    if(ERROR == rtc_init(&rtc_initpara)){
+        printf("\n\r** RTC time configuration failed! **\n\r");
+    }else{
+        printf("\n\r** RTC time configuration success! **\n\r");
+        rtc_show_time();
+        RTC_BKP0 = BKP_VALUE;
+    }
+}
+
+/*!
+    \brief      display the current time
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void rtc_show_time(void)
+{
+    uint32_t time_subsecond = 0;
+    uint8_t subsecond_ss = 0,subsecond_ts = 0,subsecond_hs = 0;
+
+    rtc_current_time_get(&rtc_initpara);
+    /* get the subsecond value of current time, and convert it into fractional format */
+    time_subsecond = rtc_subsecond_get();
+    subsecond_ss=(1000-(time_subsecond*1000+1000)/400)/100;
+    subsecond_ts=(1000-(time_subsecond*1000+1000)/400)%100/10;
+    subsecond_hs=(1000-(time_subsecond*1000+1000)/400)%10;
+
+    printf("Current time: %0.2x-%0.2x-%0.2x %0.2x:%0.2x:%0.2x .%d%d%d \n\r", \
+          rtc_initpara.year, rtc_initpara.month, rtc_initpara.date, rtc_initpara.hour, rtc_initpara.minute, rtc_initpara.second,\
+          subsecond_ss, subsecond_ts, subsecond_hs);
+	sync_rtc_time();
+}
+void sync_rtc_time(void)
+{
+	struct tm tm_time = {0};
+	struct timespec ts = {0};
+
+	/* RTC year 寄存器存放两位数年份,以 2000 为基准补齐到完整年份 */
+	tm_time.tm_year = 2000 + BCD2DEC(rtc_initpara.year) - 1900;
+	tm_time.tm_mon  = BCD2DEC(rtc_initpara.month) - 1;
+	tm_time.tm_mday = BCD2DEC(rtc_initpara.date);
+	tm_time.tm_hour = BCD2DEC(rtc_initpara.hour);
+	tm_time.tm_min  = BCD2DEC(rtc_initpara.minute);
+	tm_time.tm_sec  = BCD2DEC(rtc_initpara.second);
+	tm_time.tm_isdst = -1;
+
+	/* 将 RTC 时间转换为自 1970-01-01 起的秒数 */
+	ts.tv_sec = mktime(&tm_time);
+	ts.tv_nsec = 0;
+
+	if (clock_settime(CLOCK_REALTIME, &ts) != 0) {
+		printf("sync time failed\n");
 	}
-
-	unsigned int intSave = LOS_IntLock();
-	RTC_BKP_CENTURY = century;
-	RTC_BKP_MAGIC = BKP_MAGIC_VALUE;
-	LOS_IntRestore(intSave);
 }
 
-/* 计算星期几，返回 1-7 对应 周一至周日 */
-static uint8_t get_weekday(uint32_t year, uint8_t month, uint8_t day)
+UINT64 RtcGetTickHook(VOID)
 {
-	uint32_t y = year;
-	uint8_t m = month;
-
-	if (m == 1 || m == 2) {
-		y--;
-		m += 12;
-	}
-
-	/* 基姆拉尔森公式
-	 * 公式结果: 0=周日, 1=周一, ..., 6=周六
-	 * 需要映射到 GD32 RTC: 1=周一, ..., 7=周日
-	 */
-	uint32_t weekday = (day + 2 * m + 3 * (m + 1) / 5 + y + y / 4 - y / 100 + y / 400 + 1) % 7;
-	if (weekday == 0) {
-		return 7;
-	} else {
-		return (uint8_t)weekday;
-	}
+    return 0;
 }
 
-static int _rtc_time_set(uint32_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t minute, uint8_t second)
+INT32 RtcGetTimeHook(UINT64 *usec)
 {
-	rtc_parameter_struct rtc_time = {};
-
-	rtc_time.year = DEC2BCD(year % 100); // 年份只取后两位
-	rtc_time.month = DEC2BCD(month);
-	rtc_time.date = DEC2BCD(date);
-	rtc_time.day_of_week = get_weekday(year, month, date);
-	rtc_time.hour = DEC2BCD(hour);
-	rtc_time.minute = DEC2BCD(minute);
-	rtc_time.second = DEC2BCD(second);
-	rtc_time.factor_asyn = prescaler_a;
-	rtc_time.factor_syn = prescaler_s;
-	rtc_time.am_pm = RTC_AM;
-	rtc_time.display_format = RTC_24HOUR;
-
-	if (rtc_init(&rtc_time) == ERROR) {
-		printf("** RTC time set failed!\r\n");
-		return -1;
-	}
-	rtc_save_century(year/100);
-
-	return 0;
+    return 0;
 }
 
-static INT32 RtcGetTimeHook(UINT64 *usec)
+INT32 RtcSetTimeHook(UINT64 msec, UINT64 *usec)
 {
-	if (!usec)
-		return -1;
-
-	rtc_parameter_struct rtc_time = {};
-	rtc_current_time_get(&rtc_time);
-
-	uint32_t century = rtc_get_century();
-	if (century == 0)
-		return -1;
-
-	uint32_t year = BCD2DEC(rtc_time.year);
-	if (century == 19 && year < 70)
-		return -1;
-	year += (century * 100);
-
-	uint8_t month = BCD2DEC(rtc_time.month);
-	uint8_t day = BCD2DEC(rtc_time.date);
-	uint8_t hour = BCD2DEC(rtc_time.hour);
-	uint8_t minute = BCD2DEC(rtc_time.minute);
-	uint8_t second = BCD2DEC(rtc_time.second);
-
-	uint32_t ts_sec = calendar_to_timestamp(year, month, day, hour, minute, second);
-	*usec = (UINT64)ts_sec * 1000000ULL;
-
-	return 0;
+    return 0;
 }
 
-static INT32 RtcSetTimeHook(UINT64 msec, UINT64 *usec)
+INT32 RtcGetTimezoneHook(INT32 *tz)
 {
-	if (!usec)
-		return -1;
-
-	uint32_t year;
-	uint8_t month, date, hour, minute, second;
-	uint32_t timestamp_sec;
-
-	timestamp_sec = (uint32_t)(msec / 1000);
-	timestamp_to_calendar(timestamp_sec, &year, &month, &date, &hour, &minute, &second);
-
-	if (_rtc_time_set(year, month, date, hour, minute, second) < 0)
-		return -1;
-	return 0;
+    return 0;
 }
 
-static INT32 RtcGetTimezoneHook(INT32 *tz)
+INT32 RtcSetTimezoneHook(INT32 tz)
 {
-	*tz = TZ_VAL;
-	return 0;
+    return 0;
 }
 
 static struct RtcTimeHook rtchook = {
 	.RtcGetTickHook = NULL,
-	.RtcGetTimeHook = RtcGetTimeHook,
-	.RtcSetTimeHook = RtcSetTimeHook,
-	.RtcGetTimezoneHook = RtcGetTimezoneHook,
+	.RtcGetTimeHook = NULL,
+	.RtcSetTimeHook = NULL,
+	.RtcGetTimezoneHook = NULL,
 	.RtcSetTimezoneHook = NULL,
 };
 
-static void initRtcHardware(void)
-{
-	rcu_periph_clock_enable(RCU_PMU);
-	pmu_backup_write_enable();
-#if (CONFIG_RTC_CLOCK_SOURCE_LXTAL)
-	rcu_osci_on(RCU_LXTAL);
-	rcu_osci_stab_wait(RCU_LXTAL);
-	rcu_rtc_clock_config(RCU_RTCSRC_LXTAL);
-#else
-	rcu_osci_on(RCU_IRC32K);
-	rcu_osci_stab_wait(RCU_IRC32K);
-	rcu_rtc_clock_config(RCU_RTCSRC_IRC32K);
-#endif
-	rcu_periph_clock_enable(RCU_RTC);
-	rtc_register_sync_wait();
-
-	uint32_t RTCSRC_FLAG = GET_BITS(RCU_BDCTL, 8, 9);
-	/* check if RTC has aready been configured */
-	if (!rtc_check_magic() || (0x00 == RTCSRC_FLAG)) {
-		printf("* RTC not configured yet or lost, initialize time to default(0)\n");
-		UINT64 usec = 0;
-		RtcSetTimeHook(0, &usec);
-	}
-
-	rcu_all_reset_flag_clear();
-}
-
 void init_rtc(void)
 {
-	initRtcHardware();
+	//初始化RTC硬件
+	init_rtc_hw();
+	//同步RTC时间
+	sync_rtc_time();
+	//注册RTC钩子函数
 	LOS_RtcHookRegister(&rtchook);
 }
