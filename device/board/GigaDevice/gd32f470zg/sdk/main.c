@@ -20,7 +20,7 @@
 
 int main(void)
 {
-	UINT32 ret;   
+	UINT32 ret;
     systick_config(); 
 	uart_init();
     
@@ -40,6 +40,8 @@ int main(void)
 #if (LOSCFG_FILE_SYSTEM_TEST == 1) && defined(LOSCFG_SUPPORT_LITTLEFS)
     file_system_test();
 #endif
+    // 初始化FWDGT
+    fwdgt_init();
     printf("Open Harmony 4.1.1 start ...\r\n\r\n");
 
     extern void OHOS_SystemInit(void);
