@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 PandaBoard.
+ * Copyright (c) 2023-2023 Huawei Device Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -138,7 +138,7 @@ typedef struct {
 } gpio_t;
 
 
-void init_periph_gpio();
+void init_gpio();
 
 void gpio_high(uint8_t index);
 

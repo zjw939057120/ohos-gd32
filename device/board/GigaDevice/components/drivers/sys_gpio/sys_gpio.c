@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 PandaBoard.
+ * Copyright (c) 2023-2023 Huawei Device Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -43,12 +43,13 @@ const gpio_t gpio_list[] = {
     [DI6_INDEX] = {DI6_GPIO_CLK, DI6_GPIO_PORT, DI6_PIN},
 };
 
-void init_periph_gpio()
+void init_gpio()
 {
 	init_periph_led();
 	init_periph_rs485_en();
 	init_periph_do();
 	init_periph_di();
+	init_periph_key();
 }
 
 void led_init(uint8_t index)

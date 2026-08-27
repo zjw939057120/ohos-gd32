@@ -18,25 +18,11 @@
 #include "lwip_adapter.h"
 #endif
 
-void init_hw(void)
-{
-    // 初始化GPIO
-    init_periph_gpio();
-}
-
-void init_hwi(void)
-{
-	// 初始化按键
-	init_periph_key();
-}
-
 int main(void)
 {
 	UINT32 ret;   
     systick_config(); 
 	uart_init();
-    // 初始化硬件
-    init_hw();
     
 	//内核初始化
     ret = LOS_KernelInit();
@@ -45,6 +31,8 @@ int main(void)
         while(1){}
     }
     uart_irq_register();
+    // 初始化GPIO
+    init_gpio();
 
 #if defined(LOSCFG_SUPPORT_LITTLEFS)
     lfs_init();
@@ -53,8 +41,6 @@ int main(void)
     file_system_test();
 #endif
     printf("Open Harmony 4.1.1 start ...\r\n\r\n");
-    // 初始化硬件中断
-    init_hwi();
 
     extern void OHOS_SystemInit(void);
     OHOS_SystemInit();
