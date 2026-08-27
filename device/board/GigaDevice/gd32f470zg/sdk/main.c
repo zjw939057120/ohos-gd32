@@ -62,7 +62,7 @@ int main(void)
 #if (LOSCFG_FILE_SYSTEM_TEST == 1) && defined(LOSCFG_SUPPORT_LITTLEFS)
     file_system_test();
 #endif
-    printf("Open Harmony 4.1.1 start ...\r\n\r\n");
+    printf("%s start ... build at %s\r\n\r\n", OHOS_VERSION_STRING, OHOS_BUILD_TIME);
 
     extern void OHOS_SystemInit(void);
     OHOS_SystemInit();

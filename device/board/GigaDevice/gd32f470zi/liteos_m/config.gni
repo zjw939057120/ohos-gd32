@@ -48,6 +48,8 @@ board_cflags = [
     "-DGD32F470",
     "-DGD32F470ZI",
     "-DGD32F470_HXTAL_8M",
+    "-DOHOS_VERSION_STRING=\"${ohos_version}\"",
+    "-DOHOS_BUILD_TIME=\"${ohos_build_datetime}\""
 ]
 
 board_cxx_flags = board_cflags
