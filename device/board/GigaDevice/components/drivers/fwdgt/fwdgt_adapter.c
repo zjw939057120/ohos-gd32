@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "fwdgt.h"
+#include "fwdgt_adapter.h"
 #include "los_task.h"
 
 #define TASK_STACK_SIZE 2048
@@ -28,7 +28,7 @@ VOID fwdgt_task(VOID)
     }
 }
 
-void fwdgt_init(void)
+void init_fwdgt(void)
 {
     /* enable IRC32K */
     rcu_osci_on(RCU_IRC32K);

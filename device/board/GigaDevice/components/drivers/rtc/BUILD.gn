@@ -12,25 +12,17 @@
 # limitations under the License.
 
 import("//kernel/liteos_m/liteos.gni")
-module_name = get_path_info(rebase_path("."), "name")
-module_group(module_name) {
-  if (defined(LOSCFG_BOARD_GD32F470ZI)){
-    modules = [
-      "fwdgt",
-      "rtc",
-      "uart",
-      "littlefs_sfud",
-      "sys_gpio",
-    ]
-  }
 
-  if (defined(LOSCFG_BOARD_GD32F470ZG)){
-    modules = [
-      "fwdgt",
-      "rtc",
-      "uart",
-      "littlefs_sfud",
-      "sys_gpio",
+module_name = get_path_info(rebase_path("."), "name")
+kernel_module(module_name) {
+  sources = [
+    "rtc_adapter.c",
+     "common_time.c",
+  ]
+}
+
+config("public") {
+    include_dirs =  [     
+      ".",
     ]
-  }
 }

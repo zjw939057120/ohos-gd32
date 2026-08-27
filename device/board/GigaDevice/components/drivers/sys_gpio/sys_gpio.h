@@ -138,7 +138,7 @@ typedef struct {
 } gpio_t;
 
 
-void init_gpio();
+void init_periph_gpio();
 
 void gpio_high(uint8_t index);
 

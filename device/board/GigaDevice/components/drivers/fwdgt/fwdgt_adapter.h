@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef __FWDGT_H__
-#define __FWDGT_H__
+#ifndef __FWDGT_ADAPTER_H__
+#define __FWDGT_ADAPTER_H__
 
 #include "gd32f4xx.h"
 #include "gd32f4xx_gpio.h"
@@ -25,10 +25,10 @@
 extern "C" {
 #endif
 
-void fwdgt_init(void);
+void init_fwdgt(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __FWDGT_H__ */
+#endif /* __FWDGT_ADAPTER_H__ */

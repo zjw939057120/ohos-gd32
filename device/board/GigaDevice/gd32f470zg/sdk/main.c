@@ -18,11 +18,30 @@
 #include "lwip_adapter.h"
 #endif
 
+void init_hw(void)
+{
+    // 初始化GPIO
+    init_periph_gpio();
+}
+void init_hwi(void)
+{
+     // 初始化RTC
+    init_rtc();
+    // 初始化FWDGT
+    init_fwdgt();
+    // 初始化按键
+	init_periph_key();
+}
+
 int main(void)
 {
 	UINT32 ret;
-    systick_config(); 
+    // 初始化系统时钟
+    systick_config();
+    // 初始化UART口
 	uart_init();
+    // 初始化硬件
+    init_hw();
     
 	//内核初始化
     ret = LOS_KernelInit();
@@ -30,18 +49,19 @@ int main(void)
         printf("LiteOS kernel init failed! ERROR: 0x%x\n", ret);
         while(1){}
     }
+    printf("LiteOS kernel init success!\r\n");
+    // 注册UART中断
     uart_irq_register();
-    // 初始化GPIO
-    init_gpio();
+    // 初始化硬件中断
+    init_hwi();
 
+    
 #if defined(LOSCFG_SUPPORT_LITTLEFS)
     lfs_init();
 #endif
 #if (LOSCFG_FILE_SYSTEM_TEST == 1) && defined(LOSCFG_SUPPORT_LITTLEFS)
     file_system_test();
 #endif
-    // 初始化FWDGT
-    fwdgt_init();
     printf("Open Harmony 4.1.1 start ...\r\n\r\n");
 
     extern void OHOS_SystemInit(void);

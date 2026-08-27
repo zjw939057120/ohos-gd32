@@ -43,13 +43,12 @@ const gpio_t gpio_list[] = {
     [DI6_INDEX] = {DI6_GPIO_CLK, DI6_GPIO_PORT, DI6_PIN},
 };
 
-void init_gpio()
+void init_periph_gpio()
 {
 	init_periph_led();
 	init_periph_rs485_en();
 	init_periph_do();
 	init_periph_di();
-	init_periph_key();
 }
 
 void led_init(uint8_t index)
