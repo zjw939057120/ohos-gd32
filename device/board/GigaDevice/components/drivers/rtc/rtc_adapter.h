@@ -17,9 +17,7 @@
 #define __RTC_ADAPTER_H__
 
 #include "gd32f4xx.h"
-#include "gd32f4xx_gpio.h"
-#include "gd32f4xx_rcu.h"
-#include "gd32f4xx_timer.h"
+#include "gd32f4xx_rtc.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -32,6 +30,7 @@ extern "C" {
 #define DEC2BCD(val) 	(((val) / 10) << 4 | ((val) % 10))
 
 void init_rtc(void);
+int rtc_set_datetime(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t minute, uint8_t second);
 
 #ifdef __cplusplus
 }

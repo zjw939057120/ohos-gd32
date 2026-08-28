@@ -57,6 +57,24 @@ int printf(const char *fmt, ...)
     return len;
 }
 
+int __wrap_sprintf(char *buffer, const char *format, ...)
+{
+    va_list va;
+    va_start(va, format);
+    const int ret = vsnprintf_s(buffer, sizeof(buffer), sizeof(buffer) - 1, format, va);
+    va_end(va);
+    return ret;
+}
+
+int __wrap_snprintf(char *buffer, int count, const char *format, ...)
+{
+    va_list va;
+    va_start(va, format);
+    const int ret = vsnprintf_s(buffer, count, count - 1, format, va);
+    va_end(va);
+    return ret;
+}
+
 int __wrap_vsnprintf(char* buffer, size_t count, const char* format, va_list va)
 {
     return vsnprintf_s(buffer, count, count - 1, format, va);

@@ -13,13 +13,9 @@
  * limitations under the License.
  */
 
- #include <stdio.h>
-#include "gd32f4xx.h"
 #include "rtc_adapter.h"
-#include "los_interrupt.h"
 #include "rtc_time_hook.h"
 #include <time.h>
-#include <sys/times.h>
 
 #define RTC_CLOCK_SOURCE_LXTAL
 #define BKP_VALUE    0x32F1
@@ -27,7 +23,7 @@
 rtc_parameter_struct rtc_initpara;
 __IO uint32_t prescaler_a = 0, prescaler_s = 0;
 
-void rtc_setup(void);
+void rtc_setup(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t minute, uint8_t second);
 void rtc_show_time(void);
 uint8_t usart_input_threshold(uint32_t value);
 void rtc_pre_config(void);
@@ -48,15 +44,24 @@ int init_rtc_hw(void)
 
     /* check if RTC has aready been configured */
     if (BKP_VALUE != RTC_BKP0){
-        rtc_setup();
+        rtc_setup(2026, 8, 28, 8, 44, 59);
     }else{
         /* detect the reset source */
-        if (RESET != rcu_flag_get(RCU_FLAG_PORRST)){
-            printf("power on reset occurred....\n\r");
+        if (RESET != rcu_flag_get(RCU_FLAG_BORRST)){
+            printf("BOR reset flags\n\r");
         }else if (RESET != rcu_flag_get(RCU_FLAG_EPRST)){
-            printf("external reset occurred....\n\r");
+            printf("external reset flags\n\r");
+        }else if (RESET != rcu_flag_get(RCU_FLAG_PORRST)){
+            printf("power reset flags\n\r");
+        }else if (RESET != rcu_flag_get(RCU_FLAG_SWRST)){
+            printf("Software reset flags\n\r");
+        }else if (RESET != rcu_flag_get(RCU_FLAG_FWDGTRST)){
+            printf("FWDGT reset flags\n\r");
+        }else if (RESET != rcu_flag_get(RCU_FLAG_WWDGTRST)){
+            printf("WWDGT reset flags\n\r");
+        }else if (RESET != rcu_flag_get(RCU_FLAG_LPRST)){
+            printf("Low-power reset flags\n\r");
         }
-        printf("no need to configure RTC....\n\r");
 
         rtc_show_time();
     }
@@ -100,28 +105,27 @@ void rtc_pre_config(void)
     \param[out] none
     \retval     none
 */
-void rtc_setup(void)
+void rtc_setup(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t minute, uint8_t second)
 {
     /* setup RTC time value */
-
     rtc_initpara.factor_asyn = prescaler_a;
     rtc_initpara.factor_syn = prescaler_s;
-    rtc_initpara.year = DEC2BCD(26);
-    rtc_initpara.month = DEC2BCD(8);
-    rtc_initpara.day_of_week = RTC_THURSDAY;
-    rtc_initpara.date = DEC2BCD(27);
+    rtc_initpara.year = DEC2BCD(year % 100);
+    rtc_initpara.month = DEC2BCD(month);
+    rtc_initpara.day_of_week = RTC_SUNDAY;
+    rtc_initpara.date = DEC2BCD(date);
     rtc_initpara.display_format = RTC_24HOUR;
     rtc_initpara.am_pm = RTC_AM;
 
-	rtc_initpara.hour = DEC2BCD(15);
-	rtc_initpara.minute = DEC2BCD(59);
-	rtc_initpara.second = DEC2BCD(59);
+    RTC_BKP1 = DEC2BCD(year / 100);
+	rtc_initpara.hour = DEC2BCD(hour);
+	rtc_initpara.minute = DEC2BCD(minute);
+	rtc_initpara.second = DEC2BCD(second);
 
     /* RTC current time configuration */
     if(ERROR == rtc_init(&rtc_initpara)){
         printf("\n\r** RTC time configuration failed! **\n\r");
     }else{
-        printf("\n\r** RTC time configuration success! **\n\r");
         rtc_show_time();
         RTC_BKP0 = BKP_VALUE;
     }
@@ -156,7 +160,7 @@ void sync_rtc_time(void)
 	struct timespec ts = {0};
 
 	/* RTC year 寄存器存放两位数年份,以 2000 为基准补齐到完整年份 */
-	tm_time.tm_year = 2000 + BCD2DEC(rtc_initpara.year) - 1900;
+	tm_time.tm_year = BCD2DEC(RTC_BKP1) * 100 + BCD2DEC(rtc_initpara.year) - 1900;
 	tm_time.tm_mon  = BCD2DEC(rtc_initpara.month) - 1;
 	tm_time.tm_mday = BCD2DEC(rtc_initpara.date);
 	tm_time.tm_hour = BCD2DEC(rtc_initpara.hour);
@@ -214,4 +218,29 @@ void init_rtc(void)
 	sync_rtc_time();
 	//注册RTC钩子函数
 	LOS_RtcHookRegister(&rtchook);
+}
+
+/*!
+    \brief      对外接口:设置 RTC 时间并同步系统时间
+    \param[in]  year,month,date,hour,minute,second (十进制)
+    \retval     0 成功, -1 失败
+*/
+int rtc_set_datetime(uint16_t year, uint8_t month, uint8_t date,
+                     uint8_t hour, uint8_t minute, uint8_t second)
+{
+    /* 参数基本范围检查 */
+    if (year < 2000 || year > 2099 || month < 1 || month > 12 ||
+        date < 1 || date > 31 || hour > 23 || minute > 59 || second > 59) {
+        return -1;
+    }
+
+    /* RTC 设置需要访问 Backup 域 */
+    rcu_periph_clock_enable(RCU_PMU);
+    pmu_backup_write_enable();
+
+    rtc_setup(year, month, date, hour, minute, second);
+
+    /* 重新同步到系统时间 */
+    sync_rtc_time();
+    return 0;
 }

@@ -18,8 +18,6 @@
 
 #include "gd32f4xx.h"
 #include "gd32f4xx_gpio.h"
-#include "gd32f4xx_rcu.h"
-#include "gd32f4xx_timer.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
