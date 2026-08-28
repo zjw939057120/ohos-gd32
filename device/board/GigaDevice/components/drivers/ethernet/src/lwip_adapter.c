@@ -111,7 +111,7 @@ void dhcp_task(void *pvParameters)
                 printf("dhcp wait addr\n");
                 if (ip_address.addr != 0) {
                     dhcp_state = DHCP_ADDRESS_ASSIGNED;
-                    printf("\r\nDHCP -- eval board ip address: %d.%d.%d.%d \r\n", ip4_addr1_16(&ip_address),
+                    printf("\r\nDHCP assigned ip address: %d.%d.%d.%d \r\n", ip4_addr1_16(&ip_address),
                            ip4_addr2_16(&ip_address), ip4_addr3_16(&ip_address), ip4_addr4_16(&ip_address));
                 } else {
                     /* DHCP timeout */
@@ -120,7 +120,7 @@ void dhcp_task(void *pvParameters)
                         dhcp_state = DHCP_TIMEOUT;
                         /* stop DHCP */
                         dhcp_stop(&g_mynetif);
-                        printf("dhcp set static addr\n");
+                        printf("dhcp set static addr: %d.%d.%d.%d\n", IP_ADDR0, IP_ADDR1, IP_ADDR2, IP_ADDR3);
                         /* static address used */
                         IP4_ADDR(&ipaddr, IP_ADDR0, IP_ADDR1, IP_ADDR2, IP_ADDR3);
                         IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1, NETMASK_ADDR2, NETMASK_ADDR3);
@@ -221,9 +221,10 @@ void enet_adapter_init(net_state_callBack callBack)
     }
 
 #ifdef USE_DHCP
+printf("USE_DHCP\n");
     /* start DHCP client */
     osThreadAttr_t attr1 = {
-        .name = "DHCP", .attr_bits = 0U, .cb_mem = NULL, .stack_mem = NULL, .stack_size = 1024, .priority = 29};
+        .name = "DHCP", .attr_bits = 0U, .cb_mem = NULL, .stack_mem = NULL, .stack_size = 2048, .priority = 29};
     if (osThreadNew((osThreadFunc_t)dhcp_task, NULL, &attr1) == NULL) {
         printf("Create DHCP task failed! \n");
     }

@@ -27,25 +27,16 @@ void lwip_stack_init(void);
 #define DHCP_TASK_STACK_SIZE 2048
 #define DHCP_TASK_PRIORITY 29
 
+/* use DHCP */
+// #define USE_DHCP
+/* use ENET interrupt */
 #define USE_ENET_INTERRUPT
-#define MAC_ADDR0 2
-#define MAC_ADDR1 0xA
-#define MAC_ADDR2 0xF
-#define MAC_ADDR3 0xE
-#define MAC_ADDR4 0xD
-#define MAC_ADDR5 6
 
 /* static IP address: IP_ADDR0.IP_ADDR1.IP_ADDR2.IP_ADDR3 */
 #define IP_ADDR0 192
 #define IP_ADDR1 168
 #define IP_ADDR2 0
-#define IP_ADDR3 2
-
-/* remote IP address: IP_S_ADDR0.IP_S_ADDR1.IP_S_ADDR2.IP_S_ADDR3 */
-#define IP_S_ADDR0 192
-#define IP_S_ADDR1 168
-#define IP_S_ADDR2 0
-#define IP_S_ADDR3 3
+#define IP_ADDR3 30
 
 /* net mask */
 #define NETMASK_ADDR0 255

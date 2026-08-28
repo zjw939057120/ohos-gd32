@@ -203,17 +203,34 @@ void init_periph_key()
     /* connect key EXTI line to key GPIO pin */
     syscfg_exti_line_config(USER_KEY_EXTI_PORT_SOURCE, USER_KEY_EXTI_PIN_SOURCE);
     /* configure key EXTI line */
-    exti_init(USER_KEY_EXTI_LINE, EXTI_INTERRUPT, EXTI_TRIG_RISING);
+    exti_init(USER_KEY_EXTI_LINE, EXTI_INTERRUPT, EXTI_TRIG_BOTH);
     exti_interrupt_flag_clear(USER_KEY_EXTI_LINE);
 }
 
-//DO继电器切换
+//DO继电器切换状态
 uint8_t do_toggle = 1;
 
-void EXTI10_15_IRQHandler(void)
+void long_press_handle()
 {
-    if(RESET != exti_interrupt_flag_get(USER_KEY_EXTI_LINE)) {
-	// printf("%s:%d\r\n" ,__func__ ,__LINE__);
+	//长按事件处理
+	printf("long press\r\n");
+}
+
+void medium_press_handle()
+{
+	//中按事件处理
+	printf("medium press\r\n");
+}
+
+void short_press_handle()
+{
+	//短按事件处理
+	printf("short press\r\n");
+}
+
+void click_handle()
+{
+	//点击事件处理
 	if (do_toggle == 1) {
 		//切换DO1继电器
 		gpio_toggle(DO1_INDEX);
@@ -225,6 +242,46 @@ void EXTI10_15_IRQHandler(void)
 		gpio_toggle(DO3_INDEX);
 	}
 	do_toggle > 3 ? do_toggle = 1 : do_toggle++;
+}
+
+//按键状态
+bool key_pressed = false;
+//按键按下时间
+struct timeval key_pressed_time;
+//按键松开时间
+struct timeval key_released_time;
+
+void user_key_release_handle()
+{
+	//处理按键松开事件
+	if (key_released_time.tv_sec - key_pressed_time.tv_sec >= 10) {
+		//长按事件
+		long_press_handle();
+		} else if (key_released_time.tv_sec - key_pressed_time.tv_sec >= 5) {
+		//中按事件
+		medium_press_handle();
+		} else if (key_released_time.tv_sec - key_pressed_time.tv_sec >= 3) {
+		//短按事件
+		short_press_handle();
+		} else {
+		//点击事件
+		click_handle();
+		}
+}
+
+void EXTI10_15_IRQHandler(void)
+{
+    if(RESET != exti_interrupt_flag_get(USER_KEY_EXTI_LINE)) {
+	exti_interrupt_flag_clear(USER_KEY_EXTI_LINE);
+	if (key_pressed == false && gpio_input_bit_get(USER_KEY_GPIO_PORT, USER_KEY_PIN) == RESET) {
+		//按键按下
+		key_pressed = !key_pressed;
+		gettimeofday(&key_pressed_time, NULL);
+		} else if (key_pressed == true && gpio_input_bit_get(USER_KEY_GPIO_PORT, USER_KEY_PIN) == SET) {
+		//按键松开
+		key_pressed = !key_pressed;
+		gettimeofday(&key_released_time, NULL);
+		user_key_release_handle();
 	}
-    exti_interrupt_flag_clear(USER_KEY_EXTI_LINE);
+	}
 }
