@@ -22,6 +22,10 @@ void init_hw(void)
 {
     // 初始化GPIO
     init_periph_gpio();
+    // 初始化 TLC2543 SPI 通信
+    tlc2543_spi_init();
+    // 初始化 AD5318 SPI 通信
+    ad5318_spi_init();
 }
 void init_hwi(void)
 {
@@ -62,7 +66,7 @@ int main(void)
 #if (LOSCFG_FILE_SYSTEM_TEST == 1) && defined(LOSCFG_SUPPORT_LITTLEFS)
     file_system_test();
 #endif
-    printf("%s start ... build at %s\r\n\r\n", OHOS_VERSION_STRING, OHOS_BUILD_TIME);
+    printf("%s start ... build at %s\r\n", OHOS_VERSION, OHOS_BUILD_DATETIME);
 
     extern void OHOS_SystemInit(void);
     OHOS_SystemInit();

@@ -11,30 +11,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//kernel/liteos_m/liteos.gni")
-module_name = get_path_info(rebase_path("."), "name")
-module_group(module_name) {
-  if (defined(LOSCFG_BOARD_GD32F470ZI)){
-    modules = [
-      "fwdgt",
-      "rtc",
-      "sys_gpio",
-      "uart",
-      "littlefs_sfud",
-      "misc",
-      "spi1",
-    ]
-  }
 
-  if (defined(LOSCFG_BOARD_GD32F470ZG)){
-    modules = [
-      "fwdgt",
-      "rtc",
-      "sys_gpio",
-      "uart",
-      "littlefs_sfud",
-      "misc",
-      "spi1",
-    ]
-  }
+import("//kernel/liteos_m/liteos.gni")
+
+module_name = get_path_info(rebase_path("."), "name")
+kernel_module(module_name) {
+  include_dirs = [     ]
+
+  cflags = [ "-Wall", "-Werror"]
+  
+  sources = [ 
+    "main.c",
+  ]
 }

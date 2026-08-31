@@ -4,7 +4,7 @@
 #include "sys_gpio.h"
 
 
-#define TASK_STACK_SIZE     4096
+#define TASK_STACK_SIZE     0x1000
 #define TASK_PRIORITY       6       /* 值越大，优先级越高 */
 
 VOID sysled_task(VOID)

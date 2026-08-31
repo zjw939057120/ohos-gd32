@@ -57,7 +57,7 @@ INT32 cmd_reboot(INT32 argc, const CHAR **argv)
     return LOS_OK;
 }
 
-static void app_cmd_init(void) 
+static void shell_cmd_init(void) 
 {
     // 初始化shell命令
     OsShellInit();
@@ -67,4 +67,4 @@ static void app_cmd_init(void)
     osCmdReg(CMD_TYPE_EX, "reboot", 0, (CMD_CBK_FUNC)cmd_reboot);
 }
 
-APP_FEATURE_INIT(app_cmd_init);
+APP_FEATURE_INIT(shell_cmd_init);

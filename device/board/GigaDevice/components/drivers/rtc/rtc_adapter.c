@@ -48,19 +48,19 @@ int init_rtc_hw(void)
     }else{
         /* detect the reset source */
         if (RESET != rcu_flag_get(RCU_FLAG_BORRST)){
-            printf("BOR reset flags\n\r");
+            printf("BOR reset flags\r\n");
         }else if (RESET != rcu_flag_get(RCU_FLAG_EPRST)){
-            printf("external reset flags\n\r");
+            printf("external reset flags\r\n");
         }else if (RESET != rcu_flag_get(RCU_FLAG_PORRST)){
-            printf("power reset flags\n\r");
+            printf("power reset flags\r\n");
         }else if (RESET != rcu_flag_get(RCU_FLAG_SWRST)){
-            printf("Software reset flags\n\r");
+            printf("Software reset flags\r\n");
         }else if (RESET != rcu_flag_get(RCU_FLAG_FWDGTRST)){
-            printf("FWDGT reset flags\n\r");
+            printf("FWDGT reset flags\r\n");
         }else if (RESET != rcu_flag_get(RCU_FLAG_WWDGTRST)){
-            printf("WWDGT reset flags\n\r");
+            printf("WWDGT reset flags\r\n");
         }else if (RESET != rcu_flag_get(RCU_FLAG_LPRST)){
-            printf("Low-power reset flags\n\r");
+            printf("Low-power reset flags\r\n");
         }
 
         rtc_show_time();
@@ -124,7 +124,7 @@ void rtc_setup(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t
 
     /* RTC current time configuration */
     if(ERROR == rtc_init(&rtc_initpara)){
-        printf("\n\r** RTC time configuration failed! **\n\r");
+        printf("** RTC time configuration failed! **\r\n");
     }else{
         rtc_show_time();
         RTC_BKP0 = BKP_VALUE;
@@ -139,19 +139,9 @@ void rtc_setup(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t
 */
 void rtc_show_time(void)
 {
-    uint32_t time_subsecond = 0;
-    uint8_t subsecond_ss = 0,subsecond_ts = 0,subsecond_hs = 0;
-
     rtc_current_time_get(&rtc_initpara);
-    /* get the subsecond value of current time, and convert it into fractional format */
-    time_subsecond = rtc_subsecond_get();
-    subsecond_ss=(1000-(time_subsecond*1000+1000)/400)/100;
-    subsecond_ts=(1000-(time_subsecond*1000+1000)/400)%100/10;
-    subsecond_hs=(1000-(time_subsecond*1000+1000)/400)%10;
-
-    printf("Current time: %0.2x-%0.2x-%0.2x %0.2x:%0.2x:%0.2x .%d%d%d \n\r", \
-          rtc_initpara.year, rtc_initpara.month, rtc_initpara.date, rtc_initpara.hour, rtc_initpara.minute, rtc_initpara.second,\
-          subsecond_ss, subsecond_ts, subsecond_hs);
+    printf("RTC time: %0.2x%0.2x-%0.2x-%0.2x %0.2x:%0.2x:%0.2x\r\n", \
+          RTC_BKP1,rtc_initpara.year, rtc_initpara.month, rtc_initpara.date, rtc_initpara.hour, rtc_initpara.minute, rtc_initpara.second);
 	sync_rtc_time();
 }
 void sync_rtc_time(void)

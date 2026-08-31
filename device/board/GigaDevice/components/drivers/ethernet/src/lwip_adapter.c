@@ -111,7 +111,7 @@ void dhcp_task(void *pvParameters)
                 printf("dhcp wait addr\n");
                 if (ip_address.addr != 0) {
                     dhcp_state = DHCP_ADDRESS_ASSIGNED;
-                    printf("\r\nDHCP assigned ip address: %d.%d.%d.%d \r\n", ip4_addr1_16(&ip_address),
+                    printf("DHCP assigned ip address: %d.%d.%d.%d \r\n", ip4_addr1_16(&ip_address),
                            ip4_addr2_16(&ip_address), ip4_addr3_16(&ip_address), ip4_addr4_16(&ip_address));
                 } else {
                     /* DHCP timeout */

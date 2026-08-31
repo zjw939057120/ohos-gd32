@@ -75,4 +75,4 @@ uint16_t modbus_crc16(const uint8_t *data, uint16_t len);
 }
 #endif
 
-#endif /* __RTC_ADAPTER_H__ */
+#endif /* __MISC_ADAPTER_H__ */

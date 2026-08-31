@@ -16,8 +16,9 @@ import("//kernel/liteos_m/liteos.gni")
 module_name = get_path_info(rebase_path("."), "name")
 module_group(module_name) {
   modules = [
-    # "001_helloworld",
-    "002_led",
+    "000_led",
+    "001_spi1",
+    "002_di",
     "003_shellcmd",
     # "004_filesystem",
     # "005_os_thread",
