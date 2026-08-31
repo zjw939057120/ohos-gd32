@@ -51,25 +51,24 @@ static void low_level_init(struct netif *netif)
 {
     uint32_t i;
     /* get GD32 unique ID */
-    uint32_t sn0 = *(__IO uint32_t *)(0x1FFF7A10);
-    uint32_t sn1 = *(__IO uint32_t *)(0x1FFF7A14);
-    uint32_t sn2 = *(__IO uint32_t *)(0x1FFF7A18);
+    uint8_t sn0[4] = {*(__IO uint8_t *)(0x1FFF7A10)};
+    uint8_t sn1[4] = {*(__IO uint8_t *)(0x1FFF7A14)};
+    uint8_t sn2[4] = {*(__IO uint8_t *)(0x1FFF7A18)};
     /* calculate CRC16 value */
-    uint16_t crc0 = crc16_modbus((uint8_t *)&sn0, 4);
-    uint16_t crc1 = crc16_modbus((uint8_t *)&sn1, 4);
-    uint16_t crc2 = crc16_modbus((uint8_t *)&sn2, 4);
+    uint16_t crc0 = crc16_modbus(sn0, sizeof(sn0));
+    uint16_t crc1 = crc16_modbus(sn1, sizeof(sn1));
+    uint16_t crc2 = crc16_modbus(sn2, sizeof(sn2));
     /* set netif MAC hardware address length */
     netif->hwaddr_len = ETHARP_HWADDR_LEN;
 
     /* set netif MAC hardware address */
     int index = 0;
-
-    netif->hwaddr[index++] = (crc0) & 0XFF;
-    netif->hwaddr[index++] = (crc0 >> 8) & 0XFF;
-    netif->hwaddr[index++] = (crc1) & 0XFF;
-    netif->hwaddr[index++] = (crc1 >> 8) & 0XFF;
     netif->hwaddr[index++] = (crc2) & 0XFF;
     netif->hwaddr[index++] = (crc2 >> 8) & 0XFF;
+    netif->hwaddr[index++] = (crc1) & 0XFF;
+    netif->hwaddr[index++] = (crc1 >> 8) & 0XFF;
+    netif->hwaddr[index++] = (crc0) & 0XFF;
+    netif->hwaddr[index++] = (crc0 >> 8) & 0XFF;
     //确保它是一个合法的全局单播地址
     netif->hwaddr[0] &= 0xFC;
     /* set netif maximum transfer unit */
