@@ -37,7 +37,7 @@ extern "C" {
  * @brief 初始化 TLC2543 SPI 通信
  *
  */
-void tlc2543_spi_init(void);
+void init_tlc2543_spi(void);
 
 /**
  * @brief 从 TLC2543 读取 ADC 数据
@@ -51,7 +51,7 @@ uint16_t tlc2543_read_adc(uint8_t chan);
  * @brief 初始化 AD5318 SPI 通信
  *
  */
-void ad5318_spi_init(void);
+void init_ad5318_spi(void);
 
 /**
  * @brief 向 AD5318 写入 DAC 数据

@@ -102,7 +102,7 @@ extern "C" {
 #define RS485_3_EN_GPIO_PIN			GPIO_PIN_7
 
 
-void uart_init(void);
+void init_uart(void);
 void uart_irq_register(void);
 
 void rs485_1_send_data(uint8_t *data, int len);

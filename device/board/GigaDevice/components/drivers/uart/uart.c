@@ -241,7 +241,7 @@ void uart_irq_register(void)
     rs485_3_irq_register();
 }
 
-void rs485_1_init(void)
+void init_rs485_1(void)
 {
 	//使能 GPIO 时钟源
     rcu_periph_clock_enable(RS485_1_GPIO_RXD_RCU);
@@ -272,7 +272,7 @@ void rs485_1_init(void)
     usart_enable(RS485_1_NUMBER);
 }
 
-void rs485_2_init(void)
+void init_rs485_2(void)
 {
 	//使能 GPIO 时钟源
     rcu_periph_clock_enable(RS485_2_GPIO_RXD_RCU);
@@ -303,7 +303,7 @@ void rs485_2_init(void)
     usart_enable(RS485_2_NUMBER);
 }
 
-void rs485_3_init(void)
+void init_rs485_3(void)
 {
 	//使能 GPIO 时钟源
     rcu_periph_clock_enable(RS485_3_GPIO_RXD_RCU);
@@ -334,10 +334,10 @@ void rs485_3_init(void)
     usart_enable(RS485_3_NUMBER);
 }
 
-void uart_init(void)
+void init_uart(void)
 {
     //初始化RS485
-    rs485_1_init();
-    rs485_2_init();
-    rs485_3_init();
+    init_rs485_1();
+    init_rs485_2();
+    init_rs485_3();
 }

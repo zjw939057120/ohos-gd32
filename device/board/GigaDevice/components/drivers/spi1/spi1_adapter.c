@@ -19,7 +19,7 @@
  * @brief 初始化 TLC2543 SPI 通信
  *
  */
-void tlc2543_spi_init(void)
+void init_tlc2543_spi(void)
 {
     spi_parameter_struct spi_init_struct;
 
@@ -91,7 +91,7 @@ uint16_t tlc2543_read_adc(uint8_t chan)
  * @brief 初始化 AD5318 SPI 通信
  *
  */
-void ad5318_spi_init(void)
+void init_ad5318_spi(void)
 {
     spi_parameter_struct spi_init_struct;
 

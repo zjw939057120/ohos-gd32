@@ -21,16 +21,16 @@
 void init_hw(void)
 {
     // 初始化GPIO
-    init_periph_gpio();
+    init_gpio();
     // 初始化 TLC2543 SPI 通信
-    tlc2543_spi_init();
+    init_tlc2543_spi();
     // 初始化 AD5318 SPI 通信
-    ad5318_spi_init();
+    init_ad5318_spi();
 }
 void init_hwi(void)
 {
     // 初始化队列
-    queue_init();
+    init_queue();
     // 注册UART中断
     uart_irq_register();
      // 初始化RTC
@@ -38,7 +38,7 @@ void init_hwi(void)
     // 初始化看门狗
     init_watchdog();
     // 初始化按键
-	init_periph_key();
+	init_key();
 }
 
 int main(void)
@@ -47,7 +47,7 @@ int main(void)
     // 初始化系统时钟
     systick_config();
     // 初始化UART口
-	uart_init();
+	init_uart();
     // 初始化硬件
     init_hw();
     

@@ -34,7 +34,7 @@ UINT32 queue_read(UINT32 queueID,VOID *bufferAddr,UINT32 *bufferSize){
 	return LOS_QueueReadCopy(queueID,bufferAddr,bufferSize,LOS_WAIT_FOREVER);
 }
 
-void queue_init(void)
+void init_queue(void)
 {
     UINT32 ret = 0;
     ret = queue_create("rs485_1", MAX_QUEUE_LEN, &rs485_1, 0, MAX_MSG_SIZE);

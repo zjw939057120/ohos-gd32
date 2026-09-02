@@ -136,13 +136,13 @@ typedef struct {
 } gpio_t;
 
 
-void init_periph_gpio();
+void init_gpio();
 
 void gpio_high(uint8_t index);
 
 void gpio_low(uint8_t index);
 
-void led_init(uint8_t index);
+void init_bsp_led(uint8_t index);
 
 void led_on(uint8_t index);
 
@@ -150,13 +150,9 @@ void led_off(uint8_t index);
 
 void gpio_toggle(uint8_t index);
 
-void do_init(uint8_t index);
-
 void do_on(uint8_t index);
 
-void do_off(uint8_t index);\
-
-void di_init(uint8_t index);
+void do_off(uint8_t index);
 
 uint8_t di_read(uint8_t index);
 
@@ -168,15 +164,15 @@ void rs485_2_en(bool high);
 
 void rs485_3_en(bool high);
 
-void init_periph_led();
+void init_led();
 
-void init_periph_do();
+void init_do();
 
-void init_periph_di();
+void init_di();
 
-void init_periph_rs485_en();
+void init_rs485_en();
 
-void init_periph_key();
+void init_key();
 
 void EXTI10_15_IRQHandler(void);
 

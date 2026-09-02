@@ -43,15 +43,15 @@ const gpio_t gpio_list[] = {
     [DI6_INDEX] = {DI6_GPIO_CLK, DI6_GPIO_PORT, DI6_PIN},
 };
 
-void init_periph_gpio()
+void init_gpio()
 {
-	init_periph_led();
-	init_periph_rs485_en();
-	init_periph_do();
-	init_periph_di();
+	init_led();
+	init_rs485_en();
+	init_do();
+	init_di();
 }
 
-void led_init(uint8_t index)
+void init_bsp_led(uint8_t index)
 {
 	rcu_periph_clock_enable(gpio_list[index].rcu);
 	gpio_mode_set(gpio_list[index].gpio, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, gpio_list[index].pin);
@@ -111,26 +111,26 @@ uint8_t di_read(uint8_t index)
 	return gpio_input_bit_get(gpio_list[index].gpio, gpio_list[index].pin);
 }
 
-void init_periph_led(){
-	led_init(RS485_1_LED_INDEX);
-	led_init(RS485_2_LED_INDEX);
-	led_init(RS485_3_LED_INDEX);
-	led_init(RUNSTA_LED_INDEX);
+void init_led(){
+	init_bsp_led(RS485_1_LED_INDEX);
+	init_bsp_led(RS485_2_LED_INDEX);
+	init_bsp_led(RS485_3_LED_INDEX);
+	init_bsp_led(RUNSTA_LED_INDEX);
 }
 
-void init_periph_do(){
+void init_do(){
 	do_init(DO1_INDEX);
 	do_init(DO2_INDEX);
 	do_init(DO3_INDEX);
 }
 
-void init_periph_di(){
+void init_di(){
 	di_init(DI1_INDEX);
 	di_init(DI2_INDEX);
 	di_init(DI3_INDEX);
 }
 
-void init_periph_rs485_en(){
+void init_rs485_en(){
 	rs485_en_init(RS485_1_EN_INDEX);
 	rs485_en_init(RS485_2_EN_INDEX);
 	rs485_en_init(RS485_3_EN_INDEX);
@@ -187,7 +187,7 @@ void rs485_3_en(bool high)
 	}
 }
 
-void init_periph_key()
+void init_key()
 {
     /* enable the Tamper key GPIO clock */
     rcu_periph_clock_enable(USER_KEY_GPIO_CLK);

@@ -30,7 +30,7 @@ extern "C" {
  * @brief 初始化队列
  * 
  */
-void queue_init(void);
+void init_queue(void);
 /**
  * @brief 写入RS485_1队列
  * 

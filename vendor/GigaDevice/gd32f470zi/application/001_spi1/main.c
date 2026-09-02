@@ -39,7 +39,7 @@ while(1) {
     return NULL;
 }
 
-UINT32 adc_task_init(void)
+static void adc_task_init(void)
 {
 	UINT32 taskID;
 	TSK_INIT_PARAM_S stTask = {
@@ -50,15 +50,12 @@ UINT32 adc_task_init(void)
 	};
 	if (LOS_TaskCreate(&taskID, &stTask) != LOS_OK) {
         printf("** LOS_TaskCreate adcTask failed!\n");
-		return -1;
+		return;
 	}
-	return taskID;
 }
 
 static void *thread_dac_task(unsigned int arg)
 {
-    // 初始化SPI_DAC
-    ad5318_spi_init();
     uint8_t channel = 0;
     uint16_t hi = 1023;
     uint16_t lo = hi/2;
