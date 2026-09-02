@@ -109,9 +109,9 @@ void rs485_1_send_data(uint8_t *data, int len);
 void rs485_2_send_data(uint8_t *data, int len);
 void rs485_3_send_data(uint8_t *data, int len);
 
-void rs485_1_send_string(uint8_t *data);
-void rs485_2_send_string(uint8_t *data);
-void rs485_3_send_string(uint8_t *data);
+void rs485_1_recv_data(uint8_t *data, int len);
+void rs485_2_recv_data(uint8_t *data, int len);
+void rs485_3_recv_data(uint8_t *data, int len);
 
 extern INT32 UartGetc(VOID);
 extern EVENT_CB_S g_shellInputEvent;

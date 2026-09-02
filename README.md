@@ -24,7 +24,7 @@
 ```bash
 sudo apt install software-properties-common -y
 sudo add-apt-repository ppa:deadsnakes/ppa -y
-sudo apt install python3.9 python3-pip python3.9-distutils -y
+sudo apt install python3.9 python3.9-distutils -y
 
 ```
 

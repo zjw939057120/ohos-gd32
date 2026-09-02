@@ -29,10 +29,14 @@ void init_hw(void)
 }
 void init_hwi(void)
 {
+    // 初始化队列
+    queue_init();
+    // 注册UART中断
+    uart_irq_register();
      // 初始化RTC
     init_rtc();
-    // 初始化FWDGT
-    init_fwdgt();
+    // 初始化看门狗
+    init_watchdog();
     // 初始化按键
 	init_periph_key();
 }
@@ -53,13 +57,9 @@ int main(void)
         printf("LiteOS kernel init failed! ERROR: 0x%x\n", ret);
         while(1){}
     }
-    printf("LiteOS kernel init success!\r\n");
-    // 注册UART中断
-    uart_irq_register();
-    // 初始化硬件中断
+    // 初始化硬件中断，内核初始化完成后调用
     init_hwi();
 
-    
 #if defined(LOSCFG_SUPPORT_LITTLEFS)
     lfs_init();
 #endif

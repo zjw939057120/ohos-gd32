@@ -3,6 +3,9 @@
 #include "los_task.h"
 #include "gpio_adapter.h"
 
+#define TASK_STACK_SIZE     4096
+#define TASK_PRIORITY       6                   /* 值越大，优先级越高 */
+
 static void *thread_di_task(unsigned int arg)
 {
 	while(1) {
@@ -25,9 +28,9 @@ static void di_task_init(void)
 	UINT32 taskID;
 	TSK_INIT_PARAM_S stTask = {
 		.pfnTaskEntry = thread_di_task,
-		.uwStackSize = 0x1000,
+		.uwStackSize = TASK_STACK_SIZE,
 		.pcName = "diTask",
-		.usTaskPrio = 6,
+		.usTaskPrio = TASK_PRIORITY,
 	};
 	if (LOS_TaskCreate(&taskID, &stTask) != LOS_OK) {
         printf("** LOS_TaskCreate diTask failed!\n");

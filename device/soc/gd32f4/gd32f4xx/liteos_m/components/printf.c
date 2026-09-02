@@ -25,15 +25,7 @@ static void dputs(char const *s)
     unsigned int intSave;
 
     intSave = LOS_IntLock();
-	// 切换到发送模式
-	rs485_3_en(true);
-    while (*s) {
-      usart_data_transmit(RS485_3_NUMBER, (uint8_t)*s);
-      while(RESET == usart_flag_get(RS485_3_NUMBER, USART_FLAG_TBE));
-      s++;
-    }
-	// 切换到接收模式
-	rs485_3_en(false);
+    rs485_3_send_data((uint8_t *)s, strlen(s));
     LOS_IntRestore(intSave);
 }
 

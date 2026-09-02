@@ -3,6 +3,9 @@
 #include "los_task.h"
 #include "spi1_adapter.h"
 
+#define TASK_STACK_SIZE     4096
+#define TASK_PRIORITY       6                   /* 值越大，优先级越高 */
+
 static void *thread_adc_task(unsigned int arg)
 {
 uint16_t adc_value = 0;
@@ -41,9 +44,9 @@ UINT32 adc_task_init(void)
 	UINT32 taskID;
 	TSK_INIT_PARAM_S stTask = {
 		.pfnTaskEntry = thread_adc_task,
-		.uwStackSize = 0x1000,
+		.uwStackSize = TASK_STACK_SIZE,
 		.pcName = "adcTask",
-		.usTaskPrio = 6,
+		.usTaskPrio = TASK_PRIORITY,
 	};
 	if (LOS_TaskCreate(&taskID, &stTask) != LOS_OK) {
         printf("** LOS_TaskCreate adcTask failed!\n");
@@ -78,9 +81,9 @@ UINT32 dac_task_init(void)
 	UINT32 taskID;
 	TSK_INIT_PARAM_S stTask = {
 		.pfnTaskEntry = thread_dac_task,
-		.uwStackSize = 0x1000,
+		.uwStackSize = TASK_STACK_SIZE,
 		.pcName = "dacTask",
-		.usTaskPrio = 6,
+		.usTaskPrio = TASK_PRIORITY,
 	};
 	if (LOS_TaskCreate(&taskID, &stTask) != LOS_OK) {
         printf("** LOS_TaskCreate dacTask failed!\n");

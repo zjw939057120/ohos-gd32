@@ -3,8 +3,10 @@
 #include <stdlib.h>
 #include <ohos_init.h>
 #include "los_task.h"
+#if (LOSCFG_USE_SHELL == 1)
 #include "shell.h"
 #include "shcmd.h"
+#endif
 #include "rtc_adapter.h"
 
 
@@ -59,12 +61,14 @@ INT32 cmd_reboot(INT32 argc, const CHAR **argv)
 
 static void shell_cmd_init(void) 
 {
+#if (LOSCFG_USE_SHELL == 1)
     // 初始化shell命令
     OsShellInit();
     // 注册日期设置命令
     osCmdReg(CMD_TYPE_EX, "date_set", 6, (CMD_CBK_FUNC)cmd_date_set);
     // 注册重启命令
     osCmdReg(CMD_TYPE_EX, "reboot", 0, (CMD_CBK_FUNC)cmd_reboot);
+#endif
 }
 
 APP_FEATURE_INIT(shell_cmd_init);
