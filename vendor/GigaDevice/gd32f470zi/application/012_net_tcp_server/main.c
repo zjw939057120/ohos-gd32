@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <ohos_init.h>
 #include "los_task.h"
-#include "ethernet_init.h"
+#include "lwip_adapter.h"
 
 #include <sys/socket.h>
 #include <sys/select.h>
@@ -127,7 +127,7 @@ VOID tcp_server_handler(VOID)
     TSK_INIT_PARAM_S g_task = {0};
 
     /* 等待网络正常后进行 TCP 通信 */
-    while (get_network_link() != ETH_LINK_UP)
+    while (get_network_link() != STATE_UPDATE_LINK_UP)
     {
         LOS_TaskDelay(1000);
     }

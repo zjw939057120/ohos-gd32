@@ -23,7 +23,7 @@
 #include "los_compiler.h"
 #include "los_event.h"
 #include "los_interrupt.h"
-#include "sys_gpio.h"
+#include "gpio_adapter.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -12,7 +12,6 @@ all:
 	&& echo "-- target hexfile: ${TARGET_HEX}" \
 	&& arm-none-eabi-objcopy -O binary -S ${OUT_ELF} ${TARGET_BIN} \
 	&& echo "-- target binfile: ${TARGET_BIN}" \
-	&& make install \
 	|| echo "** failed **"
 
 # mkconfig: <TARGET>
@@ -38,9 +37,6 @@ gd32f470zi_config:
 menuconfig:
 	@make -C ./kernel/liteos_m/ menuconfig
 
-install:
-	cp -f ${TARGET_HEX} ${TARGET_BIN} /mnt/Downloads/
-
 clean:
 	rm -fr out/${TARGET}
 
@@ -63,5 +59,5 @@ git_add:
 test:
 	echo ${TARGET} ${TARGET_HEX}
 	
-.PHONY: clean distclean install menuconfig git_reset git_add test gd32f470zg_config gd32f470zi_config
+.PHONY: clean distclean menuconfig git_reset git_add test gd32f470zg_config gd32f470zi_config
 

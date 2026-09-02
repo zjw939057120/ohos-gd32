@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "sys_gpio.h"
+#include "gpio_adapter.h"
 #include "uart.h"
 
 #define DUTY_COUNT      99999

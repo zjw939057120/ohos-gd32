@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Shenzhen Kaihong Digital Industry Development Co., Ltd.
+ * Copyright (c) 2023-2023 Huawei Device Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -88,5 +88,11 @@ typedef void (*net_state_callBack)(EthLinkState state);
     }
 
 extern void enet_gpio_config(void);
+
+ /**
+ * @brief 获取网络链接状态
+ * @return EthLinkState 网络链接状态
+ */
+EthLinkState get_network_link(void);
 
 #endif // end of #ifndef LWIP_ADAPTER_H

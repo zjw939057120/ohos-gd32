@@ -18,7 +18,7 @@ module_group(module_name) {
     modules = [
       "fwdgt",
       "rtc",
-      "sys_gpio",
+      "gpio",
       "uart",
       "littlefs_sfud",
       "misc",
@@ -30,7 +30,7 @@ module_group(module_name) {
     modules = [
       "fwdgt",
       "rtc",
-      "sys_gpio",
+      "gpio",
       "uart",
       "littlefs_sfud",
       "misc",

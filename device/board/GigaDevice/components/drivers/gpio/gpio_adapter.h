@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef __SYS_GPIO_H__
-#define __SYS_GPIO_H__
+#ifndef __GPIO_ADAPTER_H__
+#define __GPIO_ADAPTER_H__
 
 #include "gd32f4xx.h"
 #include "gd32f4xx_gpio.h"
@@ -184,4 +184,4 @@ void EXTI10_15_IRQHandler(void);
 }
 #endif
 
-#endif /* __SYS_GPIO_H__ */
+#endif /* __GPIO_ADAPTER_H__ */

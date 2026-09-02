@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <ohos_init.h>
 #include "los_task.h"
-#include "sys_gpio.h"
+#include "gpio_adapter.h"
 
 static void *thread_di_task(unsigned int arg)
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Shenzhen Kaihong Digital Industry Development Co., Ltd.
+ * Copyright (c) 2023-2023 Huawei Device Co., Ltd. All rights reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -229,4 +229,11 @@ printf("USE_DHCP\n");
         printf("Create DHCP task failed! \n");
     }
 #endif
+}
+
+EthLinkState get_network_link(void)
+{
+    uint16_t phy_value;
+    enet_phy_write_read(ENET_PHY_READ, PHY_ADDRESS, PHY_REG_BSR, &phy_value);
+    return phy_value & PHY_LINKED_STATUS ? STATE_UPDATE_LINK_UP : STATE_UPDATE_LINK_DOWN;
 }

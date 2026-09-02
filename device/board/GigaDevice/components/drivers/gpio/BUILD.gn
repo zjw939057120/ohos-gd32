@@ -11,16 +11,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import("//kernel/liteos_m/liteos.gni")
 
 module_name = get_path_info(rebase_path("."), "name")
 kernel_module(module_name) {
-  include_dirs = [     ]
-
-  cflags = [ "-Wall", "-Werror"]
-  
-  sources = [ 
-    "main.c",
+  sources = [
+    "gpio_adapter.c",
   ]
+}
+
+config("public") {
+    include_dirs =  [     
+      ".",
+    ]
 }

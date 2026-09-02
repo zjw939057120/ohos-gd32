@@ -15,6 +15,7 @@
 
 #include "fwdgt_adapter.h"
 #include "los_task.h"
+#include "gpio_adapter.h"
 
 #define TASK_STACK_SIZE 2048
 #define TASK_PRIORITY 3 /* 值越大，优先级越高 */
@@ -23,8 +24,11 @@ VOID fwdgt_task(VOID)
 {
     while (1)
     {
-		fwdgt_counter_reload();
-        LOS_TaskDelay(3000);
+        fwdgt_counter_reload();
+		led_on(RUNSTA_LED_INDEX);
+        LOS_TaskDelay(1000);
+		led_off(RUNSTA_LED_INDEX);
+        LOS_TaskDelay(1000);
     }
 }
 

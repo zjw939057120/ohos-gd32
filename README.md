@@ -1,6 +1,5 @@
 # GD32F470 快速上手 OpenHarmony
 
-
 ---
 
 ## 目录
@@ -18,16 +17,26 @@
 
 #### 安装依赖库
 
-> **注意**：以下命令适用于 Ubuntu 20.04/22.04 系统，其他发行版请根据实际情况调整。
+> **注意**：以下命令适用于 Ubuntu 22.04 系统，其他发行版请根据实际情况调整。
 
-在 Ubuntu 系统上执行以下命令安装编译所需依赖：
+安装Python 3.9 及其相关依赖：
 
 ```bash
 sudo apt install software-properties-common -y
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt install python3.9 python3-pip
+sudo add-apt-repository ppa:deadsnakes/ppa -y
+sudo apt install python3.9 python3-pip python3.9-distutils -y
 
 ```
+
+将默认 Python 版本设置为 3.9：
+
+```bash
+sudo rm /usr/bin/python
+sudo ln -s /usr/bin/python3.9 /usr/bin/python
+
+```
+
+安装编译所需依赖：
 
 ```bash
 sudo apt-get update && sudo apt-get install \
@@ -61,6 +70,12 @@ sudo dpkg-reconfigure dash
 #### 安装 repo 工具（首次使用）
 
 ```bash
+
+# 创建 OpenHarmony 目录
+mkdir -p /mnt/sda/OpenHarmony-4.1-Release/OpenHarmony
+cd /mnt/sda/OpenHarmony-4.1-Release/OpenHarmony
+
+# 创建 ohos 目录
 mkdir -p ~/ohos
 curl https://raw.gitcode.com/gitcode-dev/repo/raw/main/repo-py3 > ~/ohos/repo
 chmod a+x ~/ohos/repo
@@ -68,38 +83,36 @@ pip3 install -i https://repo.huaweicloud.com/repository/pypi/simple requests
 
 ```
 
-将 repo 添加到环境变量：
-
-```bash
-vim ~/.bashrc               # 编辑环境变量配置
-export PATH=~/ohos:$PATH    # 在文件末尾添加 repo 路径
-source ~/.bashrc            # 使配置生效
-
-```
-
----
+***
 
 ### 源码获取
 
-> **提示**：源码体积较大（约 50GB+），请确保磁盘空间充足，并保持网络连接稳定。
+> **提示**：源码体积较大（约 15GB），编译器及二进制工具（约 3.7GB），请确保磁盘空间充足，并保持网络连接稳定。
 
 #### 获取 OpenHarmony 源码
 
 ```bash
-# OpenHarmony-4.1-Release
+# 初始化 repo
 ~/ohos/repo init -u https://gitcode.com/openharmony/manifest -b OpenHarmony-4.1-Release -g ohos:mini --no-repo-verify
 
 # 同步代码
-.repo/repo/repo sync -c --force-sync -j16
-.repo/repo/repo forall -c 'git lfs pull' -v -j16
+~/ohos/repo sync -c --force-sync -j16
+~/ohos/repo forall -c 'git lfs pull' -v -j16
 
 # 安装编译器及二进制工具
 ./build/prebuilts_download.sh
 
 # 安装hb工具
-python -m pip install build/hb
+sudo python -m pip install build/hb
+
+# 删除原始的 device 和 vendor 目录
+sudo rm -rf device vendor
+
+# 复制工程到当前目录
+cp -r ../ohos-gd32-OpenHarmony-4.1-Release/* .
 
 ```
+
 ### 编译构建
 
 ```bash
@@ -110,3 +123,4 @@ make gd32f470zi_config
 make -j16
 
 ```
+
