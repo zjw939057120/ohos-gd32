@@ -7,12 +7,12 @@
 #define TASK_STACK_SIZE     4096
 #define TASK_PRIORITY       6                   /* 值越大，优先级越高 */
 
-uint8_t bufferAddr[MAX_MSG_SIZE];  /* 接收缓冲区 */
-UINT32 bufferSize = 0;  /* 接收缓冲区大小 */
-
 static void *thread_modebus_extend_task(unsigned int arg)
 {
 	UINT32 ret = 0;
+	uint8_t bufferAddr[MAX_MSG_SIZE];  /* 接收缓冲区 */
+	UINT32 bufferSize = 0;  /* 接收缓冲区大小 */
+	
 	while(1) {
 		bufferSize = MAX_MSG_SIZE;
 		ret = rs485_3_mq_recv(bufferAddr,&bufferSize);
@@ -20,8 +20,8 @@ static void *thread_modebus_extend_task(unsigned int arg)
 			LOS_TaskDelay(100);
 			continue;
 		}
-		printf("modebus_extend_task %d\r\n",bufferSize);
-		}
+		rs485_3_send(bufferAddr,bufferSize);
+	}
 
     return NULL;
 }

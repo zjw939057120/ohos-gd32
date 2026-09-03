@@ -28,8 +28,8 @@ module_group(module_name) {
     # "010_os_queue",
     # "011_net_tcp_client",
     # "012_net_tcp_server",
-    # "013_modebus_slave",
-    # "014_modebus_master",
+    "013_modebus_slave",
+    "014_modebus_master",
     "015_modebus_extend",
   ]
 }
