@@ -38,7 +38,7 @@ void init_queue(void);
  * @param bufferSize 数据大小
  * @return UINT32 0 成功
  */
-UINT32 rs485_1_write(VOID *bufferAddr,UINT32 bufferSize);
+UINT32 rs485_1_mq_send(VOID *bufferAddr,UINT32 bufferSize);
 /**
  * @brief 读取RS485_1队列数据
  * 
@@ -46,7 +46,7 @@ UINT32 rs485_1_write(VOID *bufferAddr,UINT32 bufferSize);
  * @param bufferSize 数据大小
  * @return UINT32 0 成功
  */
-UINT32 rs485_1_read(VOID *bufferAddr,UINT32 *bufferSize);
+UINT32 rs485_1_mq_recv(VOID *bufferAddr,UINT32 *bufferSize);
 /**
  * @brief 写入RS485_2队列
  * 
@@ -54,7 +54,7 @@ UINT32 rs485_1_read(VOID *bufferAddr,UINT32 *bufferSize);
  * @param bufferSize 数据大小
  * @return UINT32 0 成功
  */
-UINT32 rs485_2_write(VOID *bufferAddr,UINT32 bufferSize);
+UINT32 rs485_2_mq_send(VOID *bufferAddr,UINT32 bufferSize);
 /**
  * @brief 读取RS485_2队列数据
  * 
@@ -62,7 +62,7 @@ UINT32 rs485_2_write(VOID *bufferAddr,UINT32 bufferSize);
  * @param bufferSize 数据大小
  * @return UINT32 0 成功
  */
-UINT32 rs485_2_read(VOID *bufferAddr,UINT32 *bufferSize);
+UINT32 rs485_2_mq_recv(VOID *bufferAddr,UINT32 *bufferSize);
 /**
  * @brief 写入RS485_3队列
  * 
@@ -70,7 +70,7 @@ UINT32 rs485_2_read(VOID *bufferAddr,UINT32 *bufferSize);
  * @param bufferSize 数据大小
  * @return UINT32 0 成功
  */
-UINT32 rs485_3_write(VOID *bufferAddr,UINT32 bufferSize);
+UINT32 rs485_3_mq_send(VOID *bufferAddr,UINT32 bufferSize);
 /**
  * @brief 读取RS485_3队列数据
  * 
@@ -78,7 +78,7 @@ UINT32 rs485_3_write(VOID *bufferAddr,UINT32 bufferSize);
  * @param bufferSize 数据大小
  * @return UINT32 0 成功
  */
-UINT32 rs485_3_read(VOID *bufferAddr,UINT32 *bufferSize);
+UINT32 rs485_3_mq_recv(VOID *bufferAddr,UINT32 *bufferSize);
 
 
 #ifdef __cplusplus

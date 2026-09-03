@@ -13,24 +13,14 @@
 
 
 import("//kernel/liteos_m/liteos.gni")
+
 module_name = get_path_info(rebase_path("."), "name")
-module_group(module_name) {
-  modules = [
-    # "001_spi1",
-    # "002_di",
-    "003_shellcmd",
-    # "004_filesystem",
-    # "005_os_thread",
-    # "006_os_timer",
-    # "007_os_event",
-    # "008_os_mutex",
-    # "009_os_sem",
-    # "010_os_queue",
-    # "011_net_tcp_client",
-    # "012_net_tcp_server",
-    # "013_modebus_slave",
-    # "014_modebus_master",
-    "015_modebus_extend",
+kernel_module(module_name) {
+  include_dirs = [     ]
+
+  cflags = [ "-Wall", "-Werror"]
+  
+  sources = [ 
+    "main.c",
   ]
 }
-

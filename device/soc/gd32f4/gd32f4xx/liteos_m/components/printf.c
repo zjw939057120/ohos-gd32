@@ -25,7 +25,7 @@ static void dputs(char const *s)
     unsigned int intSave;
 
     intSave = LOS_IntLock();
-    rs485_3_send_data((uint8_t *)s, strlen(s));
+    rs485_3_send((uint8_t *)s, strlen(s));
     LOS_IntRestore(intSave);
 }
 

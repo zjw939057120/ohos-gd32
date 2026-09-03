@@ -16,7 +16,7 @@
 #include "uart.h"
 #include "queue_adapter.h"
 
-void rs485_1_send_data(uint8_t *data, int len)
+void rs485_1_send(uint8_t *data, int len)
 {
 	int i;
     // 切换到发送模式
@@ -30,7 +30,7 @@ void rs485_1_send_data(uint8_t *data, int len)
 	rs485_1_en(false);
 }
 
-void rs485_2_send_data(uint8_t *data, int len)
+void rs485_2_send(uint8_t *data, int len)
 {
 	int i;
 	// 切换到发送模式
@@ -44,7 +44,7 @@ void rs485_2_send_data(uint8_t *data, int len)
 	rs485_2_en(false);
 }
 
-void rs485_3_send_data(uint8_t *data, int len)
+void rs485_3_send(uint8_t *data, int len)
 {
 	int i;
 	// 切换到发送模式
@@ -78,15 +78,16 @@ INT32 UartGetc(VOID)
 
 uint8_t rs485_1_rx_buf[MAX_MSG_SIZE];/* 接收缓冲区 */
 uint16_t rs485_1_rx_index = 0;/* 接收缓冲区索引 */
+uint8_t rs485_1_rx_temp = 0;/* 接收缓冲区临时变量 */
 
 void RS485_1_IRQHandler(void)
 {
     if(usart_flag_get(RS485_1_NUMBER, USART_FLAG_RBNE) != RESET)    //判断是否接收中断标志位置位
     {      
         usart_flag_clear(RS485_1_NUMBER, USART_FLAG_RBNE);
-        uint8_t c = usart_data_receive(RS485_1_NUMBER);
+        rs485_1_rx_temp = usart_data_receive(RS485_1_NUMBER);
         if(rs485_1_rx_index < MAX_MSG_SIZE){
-            rs485_1_rx_buf[rs485_1_rx_index++] = c;    //将接收到的数据存入buf    
+            rs485_1_rx_buf[rs485_1_rx_index++] = rs485_1_rx_temp;    //将接收到的数据存入buf    
         }else{
             // 接收缓冲区已满，丢弃数据
             rs485_1_rx_index = 0;
@@ -97,27 +98,28 @@ void RS485_1_IRQHandler(void)
         // 清空空闲中断标志位
         usart_flag_get(RS485_1_NUMBER, USART_FLAG_IDLE);
         usart_data_receive(RS485_1_NUMBER);
-        UINT32 ret = rs485_1_write(rs485_1_rx_buf, rs485_1_rx_index);
+        UINT32 ret = rs485_1_mq_send(rs485_1_rx_buf, rs485_1_rx_index);
         // 清空接收缓冲区
         rs485_1_rx_index = 0;
         if(ret != LOS_OK)
         {
-            printf("rs485_1_write fail! ret=%d\n", ret);
+            printf("rs485_1_mq_send fail! ret=%d\n", ret);
         }
     }
 }
 
 uint8_t rs485_2_rx_buf[MAX_MSG_SIZE];/* 接收缓冲区 */
 uint16_t rs485_2_rx_index = 0;/* 接收缓冲区索引 */
+uint8_t rs485_2_rx_temp = 0;/* 接收缓冲区临时变量 */
 
 void RS485_2_IRQHandler(void)
 {
     if(usart_flag_get(RS485_2_NUMBER, USART_FLAG_RBNE) != RESET)    //判断是否接收中断标志位置位
     {      
         usart_flag_clear(RS485_2_NUMBER, USART_FLAG_RBNE);
-        uint8_t c = usart_data_receive(RS485_2_NUMBER);
+        rs485_2_rx_temp = usart_data_receive(RS485_2_NUMBER);
         if(rs485_2_rx_index < MAX_MSG_SIZE){
-            rs485_2_rx_buf[rs485_2_rx_index++] = c;    //将接收到的数据存入buf    
+            rs485_2_rx_buf[rs485_2_rx_index++] = rs485_2_rx_temp;    //将接收到的数据存入buf    
         }else{
             // 接收缓冲区已满，丢弃数据
             rs485_2_rx_index = 0;
@@ -128,12 +130,12 @@ void RS485_2_IRQHandler(void)
         // 清空空闲中断标志位
         usart_flag_get(RS485_2_NUMBER, USART_FLAG_IDLE);
         usart_data_receive(RS485_2_NUMBER);
-        UINT32 ret = rs485_2_write(rs485_2_rx_buf, rs485_2_rx_index);
+        UINT32 ret = rs485_2_mq_send(rs485_2_rx_buf, rs485_2_rx_index);
         // 清空接收缓冲区
         rs485_2_rx_index = 0;
         if(ret != LOS_OK)
         {
-            printf("rs485_2_write fail! ret=%d\n", ret);
+            printf("rs485_2_mq_send fail! ret=%d\n", ret);
         }
     }
 }
@@ -142,6 +144,7 @@ void RS485_2_IRQHandler(void)
 #if (LOSCFG_USE_SHELL != 1)
 uint8_t rs485_3_rx_buf[MAX_MSG_SIZE];/* 接收缓冲区 */
 uint16_t rs485_3_rx_index = 0;/* 接收缓冲区索引 */
+uint8_t rs485_3_rx_temp = 0;/* 接收缓冲区临时变量 */
 #endif
 
 void RS485_3_IRQHandler(void)
@@ -149,11 +152,11 @@ void RS485_3_IRQHandler(void)
     if(usart_flag_get(RS485_3_NUMBER, USART_FLAG_RBNE) != RESET)    //判断是否接收中断标志位置位
     {      
         usart_flag_clear(RS485_3_NUMBER, USART_FLAG_RBNE);
-        uint8_t c = usart_data_receive(RS485_3_NUMBER);
+        rs485_3_rx_temp = usart_data_receive(RS485_3_NUMBER);
         // 禁用shell时，才处理接收数据
 #if (LOSCFG_USE_SHELL != 1)
         if(rs485_3_rx_index < MAX_MSG_SIZE){
-            rs485_3_rx_buf[rs485_3_rx_index++] = c;    //将接收到的数据存入buf    
+            rs485_3_rx_buf[rs485_3_rx_index++] = rs485_3_rx_temp;    //将接收到的数据存入buf    
         }else{
             // 接收缓冲区已满，丢弃数据
             rs485_3_rx_index = 0;
@@ -161,7 +164,7 @@ void RS485_3_IRQHandler(void)
 #endif
 
 #if (LOSCFG_USE_SHELL == 1)
-        rx_buf[rx_index++] = c;
+        rx_buf[rx_index++] = rs485_3_rx_temp;
         rx_index %= RX_BUF_SIZE;
         if (rx_index == tx_index) {
             tx_index++;
@@ -177,12 +180,12 @@ void RS485_3_IRQHandler(void)
         usart_data_receive(RS485_3_NUMBER);
         // 禁用shell时，才处理接收数据
 #if (LOSCFG_USE_SHELL != 1)
-        UINT32 ret = rs485_3_write(rs485_3_rx_buf, rs485_3_rx_index);
+        UINT32 ret = rs485_3_mq_send(rs485_3_rx_buf, rs485_3_rx_index);
         // 清空接收缓冲区
         rs485_3_rx_index = 0;
         if(ret != LOS_OK)
         {
-            printf("rs485_3_write fail! ret=%d\n", ret);
+            printf("rs485_3_mq_send fail! ret=%d\n", ret);
         }
 #endif
     }

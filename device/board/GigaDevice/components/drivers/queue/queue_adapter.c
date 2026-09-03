@@ -26,11 +26,11 @@ UINT32 queue_create(CHAR *queueName,UINT16 len,UINT32 *queueID,UINT32 flags,UINT
 	return LOS_QueueCreate(queueName,len,queueID,flags,maxMsgSize);
 }
 
-UINT32 queue_write(UINT32 queueID,VOID *bufferAddr,UINT32 bufferSize){
+UINT32 queue_send(UINT32 queueID,VOID *bufferAddr,UINT32 bufferSize){
 	return LOS_QueueWriteCopy(queueID,bufferAddr,bufferSize,0);
 }
 
-UINT32 queue_read(UINT32 queueID,VOID *bufferAddr,UINT32 *bufferSize){
+UINT32 queue_recv(UINT32 queueID,VOID *bufferAddr,UINT32 *bufferSize){
 	return LOS_QueueReadCopy(queueID,bufferAddr,bufferSize,LOS_WAIT_FOREVER);
 }
 
@@ -51,26 +51,26 @@ void init_queue(void)
     }
 }
 
-UINT32 rs485_1_write(VOID *bufferAddr,UINT32 bufferSize){
-	return queue_write(rs485_1,bufferAddr,bufferSize);
+UINT32 rs485_1_mq_send(VOID *bufferAddr,UINT32 bufferSize){
+	return queue_send(rs485_1,bufferAddr,bufferSize);
 }
 
-UINT32 rs485_1_read(VOID *bufferAddr,UINT32 *bufferSize){
-	return queue_read(rs485_1,bufferAddr,bufferSize);
+UINT32 rs485_1_mq_recv(VOID *bufferAddr,UINT32 *bufferSize){
+	return queue_recv(rs485_1,bufferAddr,bufferSize);
 }
 
-UINT32 rs485_2_write(VOID *bufferAddr,UINT32 bufferSize){
-	return queue_write(rs485_2,bufferAddr,bufferSize);
+UINT32 rs485_2_mq_send(VOID *bufferAddr,UINT32 bufferSize){
+	return queue_send(rs485_2,bufferAddr,bufferSize);
 }
 
-UINT32 rs485_2_read(VOID *bufferAddr,UINT32 *bufferSize){
-	return queue_read(rs485_2,bufferAddr,bufferSize);
+UINT32 rs485_2_mq_recv(VOID *bufferAddr,UINT32 *bufferSize){
+	return queue_recv(rs485_2,bufferAddr,bufferSize);
 }
 
-UINT32 rs485_3_write(VOID *bufferAddr,UINT32 bufferSize){
-	return queue_write(rs485_3,bufferAddr,bufferSize);
+UINT32 rs485_3_mq_send(VOID *bufferAddr,UINT32 bufferSize){
+	return queue_send(rs485_3,bufferAddr,bufferSize);
 }
 
-UINT32 rs485_3_read(VOID *bufferAddr,UINT32 *bufferSize){
-	return queue_read(rs485_3,bufferAddr,bufferSize);
+UINT32 rs485_3_mq_recv(VOID *bufferAddr,UINT32 *bufferSize){
+	return queue_recv(rs485_3,bufferAddr,bufferSize);
 }

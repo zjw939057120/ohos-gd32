@@ -105,13 +105,13 @@ extern "C" {
 void init_uart(void);
 void uart_irq_register(void);
 
-void rs485_1_send_data(uint8_t *data, int len);
-void rs485_2_send_data(uint8_t *data, int len);
-void rs485_3_send_data(uint8_t *data, int len);
+void rs485_1_send(uint8_t *data, int len);
+void rs485_2_send(uint8_t *data, int len);
+void rs485_3_send(uint8_t *data, int len);
 
-void rs485_1_recv_data(uint8_t *data, int len);
-void rs485_2_recv_data(uint8_t *data, int len);
-void rs485_3_recv_data(uint8_t *data, int len);
+void rs485_1_recv(uint8_t *data, int len);
+void rs485_2_recv(uint8_t *data, int len);
+void rs485_3_recv(uint8_t *data, int len);
 
 extern INT32 UartGetc(VOID);
 extern EVENT_CB_S g_shellInputEvent;
