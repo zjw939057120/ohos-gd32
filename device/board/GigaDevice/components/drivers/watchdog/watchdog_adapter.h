@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+/**
+ * @brief 初始化看门狗外设
+ * 
+ */
 void init_watchdog(void);
 
 #ifdef __cplusplus

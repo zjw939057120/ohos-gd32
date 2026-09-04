@@ -26,6 +26,11 @@
 extern "C" {
 #endif
 
+/**
+ * @brief 生成MAC地址
+ * 
+ * @param mac_addr MAC地址指针
+ */
 void generate_mac_from_uid(uint8_t *mac_addr);
 
 #ifdef __cplusplus

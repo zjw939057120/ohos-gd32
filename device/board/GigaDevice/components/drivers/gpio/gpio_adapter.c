@@ -141,8 +141,8 @@ void rs485_en_init(uint8_t index)
 	rcu_periph_clock_enable(gpio_list[index].rcu);
 	gpio_mode_set(gpio_list[index].gpio, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, gpio_list[index].pin);
 	gpio_output_options_set(gpio_list[index].gpio, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, gpio_list[index].pin);
-	//默认接收模式
-	gpio_bit_reset(gpio_list[index].gpio, gpio_list[index].pin);
+	//默认发送模式
+	gpio_bit_set(gpio_list[index].gpio, gpio_list[index].pin);
 }
 
 void rs485_1_en(bool high)

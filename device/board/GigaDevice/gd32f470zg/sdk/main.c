@@ -20,13 +20,12 @@
 
 void init_hw(void)
 {
-    // 初始化GPIO
-    init_gpio();
     // 初始化 TLC2543 SPI 通信
     init_tlc2543_spi();
     // 初始化 AD5318 SPI 通信
     init_ad5318_spi();
 }
+
 void init_hwi(void)
 {
     // 初始化队列
@@ -46,11 +45,13 @@ int main(void)
 	UINT32 ret;
     // 初始化系统时钟
     systick_config();
+    // 初始化GPIO
+    init_gpio();
     // 初始化UART口
 	init_uart();
     // 初始化硬件
     init_hw();
-    
+    printf("%s start ... build at %s\r\n", OHOS_VERSION, OHOS_BUILD_DATETIME);
 	//内核初始化
     ret = LOS_KernelInit();
     if (ret != LOS_OK) {
@@ -66,7 +67,6 @@ int main(void)
 #if (LOSCFG_FILE_SYSTEM_TEST == 1) && defined(LOSCFG_SUPPORT_LITTLEFS)
     file_system_test();
 #endif
-    printf("%s start ... build at %s\r\n", OHOS_VERSION, OHOS_BUILD_DATETIME);
 
     extern void OHOS_SystemInit(void);
     OHOS_SystemInit();

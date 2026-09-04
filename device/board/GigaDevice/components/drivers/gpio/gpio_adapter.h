@@ -128,52 +128,151 @@ extern "C" {
 #define DI6_GPIO_PORT		        GPIOE
 
 
-
+/**
+ * @brief GPIO引脚定义结构体
+ * 
+ * @param rcu RCU外设枚举值
+ * @param gpio GPIO外设枚举值
+ * @param pin GPIO引脚枚举值
+ */
 typedef struct {
     rcu_periph_enum rcu;
     uint32_t gpio;
     uint32_t pin;
 } gpio_t;
 
-
+/**
+ * @brief 初始化GPIO外设
+ * 
+ */
 void init_gpio();
 
+/**
+ * @brief 设置GPIO引脚为高电平
+ * 
+ * @param index GPIO引脚索引
+ */
 void gpio_high(uint8_t index);
 
+/**
+ * @brief 设置GPIO引脚为低电平
+ * 
+ * @param index GPIO引脚索引
+ */
 void gpio_low(uint8_t index);
 
+/**
+ * @brief 初始化GPIO引脚为LED灯
+ * 
+ * @param index GPIO引脚索引
+ */
 void init_bsp_led(uint8_t index);
 
+/**
+ * @brief 使能LED灯
+ * 
+ * @param index GPIO引脚索引
+ */
 void led_on(uint8_t index);
 
+/**
+ * @brief 禁用LED灯
+ * 
+ * @param index GPIO引脚索引
+ */
 void led_off(uint8_t index);
 
+/**
+ * @brief 切换GPIO引脚电平
+ * 
+ * @param index GPIO引脚索引
+ */
 void gpio_toggle(uint8_t index);
 
+/**
+ * @brief 设置DO引脚为高电平
+ * 
+ * @param index GPIO引脚索引
+ */
 void do_on(uint8_t index);
 
+/**
+ * @brief 设置DO引脚为低电平
+ * 
+ * @param index GPIO引脚索引
+ */
 void do_off(uint8_t index);
 
+/**
+ * @brief 读取DI引脚电平
+ * 
+ * @param index GPIO引脚索引
+ * @return uint8_t DI引脚电平
+ */
 uint8_t di_read(uint8_t index);
 
+/**
+ * @brief 初始化RS485使能引脚
+ * 
+ * @param index GPIO引脚索引
+ */
 void rs485_en_init(uint8_t index);
 
+/**
+ * @brief 设置RS485使能引脚为高电平
+ * 
+ * @param high 是否为高电平
+ */
 void rs485_1_en(bool high);
 
+/**
+ * @brief 设置RS485使能引脚为低电平
+ * 
+ * @param high 是否为高电平
+ */
 void rs485_2_en(bool high);
 
+/**
+ * @brief 设置RS485使能引脚为低电平
+ * 
+ * @param high 是否为高电平
+ */
 void rs485_3_en(bool high);
 
+/**
+ * @brief 初始化LED灯
+ * 
+ */
 void init_led();
 
+/**
+ * @brief 初始化DO引脚
+ * 
+ */
 void init_do();
 
+/**
+ * @brief 初始化DI引脚
+ * 
+ */
 void init_di();
 
+/**
+ * @brief 初始化RS485使能引脚
+ * 
+ */
 void init_rs485_en();
 
+/**
+ * @brief 初始化按键引脚
+ * 
+ */
 void init_key();
 
+/**
+ * @brief 处理按键中断
+ * 
+ */
 void EXTI10_15_IRQHandler(void);
 
 #ifdef __cplusplus

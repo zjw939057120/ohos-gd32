@@ -142,9 +142,14 @@ void rtc_show_time(void)
     rtc_current_time_get(&rtc_initpara);
     printf("RTC time: %0.2x%0.2x-%0.2x-%0.2x %0.2x:%0.2x:%0.2x\r\n", \
           RTC_BKP1,rtc_initpara.year, rtc_initpara.month, rtc_initpara.date, rtc_initpara.hour, rtc_initpara.minute, rtc_initpara.second);
-	sync_rtc_time();
+	sync_system_time();
 }
-void sync_rtc_time(void)
+
+/**
+ * @brief 同步系统时间
+ * 
+ */
+void sync_system_time(void)
 {
 	struct tm tm_time = {0};
 	struct timespec ts = {0};
@@ -200,21 +205,31 @@ static struct RtcTimeHook rtchook = {
 	.RtcSetTimezoneHook = NULL,
 };
 
+/**
+ * @brief 初始化RTC外设
+ * 
+ */
 void init_rtc(void)
 {
 	//初始化RTC硬件
 	init_rtc_hw();
-	//同步RTC时间
-	sync_rtc_time();
+	//同步系统时间
+	sync_system_time();
 	//注册RTC钩子函数
 	LOS_RtcHookRegister(&rtchook);
 }
 
-/*!
-    \brief      对外接口:设置 RTC 时间并同步系统时间
-    \param[in]  year,month,date,hour,minute,second (十进制)
-    \retval     0 成功, -1 失败
-*/
+/**
+ * @brief 设置RTC时间
+ * 
+ * @param year 年份
+ * @param month 月份
+ * @param date 日
+ * @param hour 小时
+ * @param minute 分钟
+ * @param second 秒
+ * @return int 0 成功 -1 失败
+ */
 int rtc_set_datetime(uint16_t year, uint8_t month, uint8_t date,
                      uint8_t hour, uint8_t minute, uint8_t second)
 {
@@ -231,6 +246,6 @@ int rtc_set_datetime(uint16_t year, uint8_t month, uint8_t date,
     rtc_setup(year, month, date, hour, minute, second);
 
     /* 重新同步到系统时间 */
-    sync_rtc_time();
+    sync_system_time();
     return 0;
 }
