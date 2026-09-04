@@ -12,33 +12,16 @@
 # limitations under the License.
 
 import("//kernel/liteos_m/liteos.gni")
-module_name = get_path_info(rebase_path("."), "name")
-module_group(module_name) {
-  if (defined(LOSCFG_BOARD_GD32F470ZI)){
-    modules = [
-      "watchdog",
-      "rtc",
-      "gpio",
-      "uart",
-      "queue",
-      "littlefs_sfud",
-      "misc",
-      "spi0",
-      "spi1",
-    ]
-  }
 
-  if (defined(LOSCFG_BOARD_GD32F470ZG)){
-    modules = [
-      "watchdog",
-      "rtc",
-      "gpio",
-      "uart",
-      "queue",
-      "littlefs_sfud",
-      "misc",
-      "spi0",
-      "spi1",
+module_name = get_path_info(rebase_path("."), "name")
+kernel_module(module_name) {
+  sources = [
+    "spi0_adapter.c",
+  ]
+}
+
+config("public") {
+    include_dirs =  [     
+      ".",
     ]
-  }
 }
