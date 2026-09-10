@@ -88,6 +88,27 @@ void lwip_stack_init(void)
     netif_set_up(&g_mynetif);
 }
 
+void update_static_ip(uint8_t ip0, uint8_t ip1, uint8_t ip2, uint8_t ip3,
+                      uint8_t mask0, uint8_t mask1, uint8_t mask2, uint8_t mask3,
+                      uint8_t gw0, uint8_t gw1, uint8_t gw2, uint8_t gw3)
+{
+    ip_addr_t new_ipaddr, new_netmask, new_gw;
+
+    // 1. 构造新的 IP 参数
+    IP_ADDR4(&new_ipaddr, ip0, ip1, ip2, ip3);
+    IP_ADDR4(&new_netmask, mask0, mask1, mask2, mask3);
+    IP_ADDR4(&new_gw, gw0, gw1, gw2, gw3);
+
+    // 2. 关闭网络接口
+    netif_set_down(&g_mynetif);
+
+    // 3. 应用新的 IP 地址、子网掩码和网关
+    netif_set_addr(&g_mynetif, &new_ipaddr, &new_netmask, &new_gw);
+
+    // 4. 重新启用网络接口
+    netif_set_up(&g_mynetif);
+}
+
 #ifdef USE_DHCP
 void dhcp_task(void *pvParameters)
 {

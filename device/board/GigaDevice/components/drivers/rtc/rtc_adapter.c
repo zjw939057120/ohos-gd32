@@ -44,7 +44,10 @@ int init_rtc_hw(void)
 
     /* check if RTC has aready been configured */
     if (BKP_VALUE != RTC_BKP0){
-        rtc_setup(2026, 8, 28, 8, 44, 59);
+        uint16_t year;
+        uint8_t month, date, hour, minute, second;
+        get_build_time(&year, &month, &date, &hour, &minute, &second);
+        rtc_setup(year, month, date, hour, minute, second);
     }else{
         /* detect the reset source */
         if (RESET != rcu_flag_get(RCU_FLAG_BORRST)){

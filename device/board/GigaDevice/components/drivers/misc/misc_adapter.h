@@ -33,6 +33,18 @@ extern "C" {
  */
 void generate_mac_from_uid(uint8_t *mac_addr);
 
+/**
+ * @brief 获取构建日期时间
+ * 
+ * @param year 年指针
+ * @param month 月指针
+ * @param date 日指针
+ * @param hour 小时指针
+ * @param minute 分钟指针
+ * @param second 秒指针
+ */
+void get_build_time(uint16_t *year, uint8_t *month, uint8_t *date, uint8_t *hour, uint8_t *minute, uint8_t *second);
+
 #ifdef __cplusplus
 }
 #endif

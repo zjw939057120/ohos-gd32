@@ -18,6 +18,7 @@
 
 #include "gd32f4xx.h"
 #include "stdint.h"
+#include "lwipopts.h"
 
 void lwip_stack_init(void);
 #define DHCP_TIMEOUT_S 30
@@ -28,14 +29,16 @@ void lwip_stack_init(void);
 #define DHCP_TASK_PRIORITY 29
 
 /* use DHCP */
-// #define USE_DHCP
+#if LWIP_DHCP
+#define USE_DHCP
+#endif
 /* use ENET interrupt */
 #define USE_ENET_INTERRUPT
 
 /* static IP address: IP_ADDR0.IP_ADDR1.IP_ADDR2.IP_ADDR3 */
 #define IP_ADDR0 192
 #define IP_ADDR1 168
-#define IP_ADDR2 0
+#define IP_ADDR2 2
 #define IP_ADDR3 30
 
 /* net mask */
@@ -47,7 +50,7 @@ void lwip_stack_init(void);
 /* gateway address */
 #define GW_ADDR0 192
 #define GW_ADDR1 168
-#define GW_ADDR2 0
+#define GW_ADDR2 2
 #define GW_ADDR3 1
 
 #define RMII_MODE // user have to provide the 50 MHz clock by soldering a 50 MHz oscillator
@@ -94,5 +97,25 @@ extern void enet_gpio_config(void);
  * @return EthLinkState 网络链接状态
  */
 EthLinkState get_network_link(void);
+
+/**
+ * @brief 更新静态IP地址
+ * 
+ * @param ip0 IP地址字节0
+ * @param ip1 IP地址字节1
+ * @param ip2 IP地址字节2
+ * @param ip3 IP地址字节3
+ * @param mask0 子网掩码字节0
+ * @param mask1 子网掩码字节1
+ * @param mask2 子网掩码字节2
+ * @param mask3 子网掩码字节3
+ * @param gw0 网关地址字节0
+ * @param gw1 网关地址字节1
+ * @param gw2 网关地址字节2
+ * @param gw3 网关地址字节3
+ */
+void update_static_ip(uint8_t ip0, uint8_t ip1, uint8_t ip2, uint8_t ip3,
+                      uint8_t mask0, uint8_t mask1, uint8_t mask2, uint8_t mask3,
+                      uint8_t gw0, uint8_t gw1, uint8_t gw2, uint8_t gw3);
 
 #endif // end of #ifndef LWIP_ADAPTER_H
