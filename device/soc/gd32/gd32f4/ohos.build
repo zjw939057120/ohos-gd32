@@ -1,0 +1,10 @@
+{
+  "parts": {
+    "device_soc_gd32f4": {
+      "module_list": [
+        "//device/soc/gd32/gd32f4:gd32f4"
+      ]
+    }
+  },
+  "subsystem": "device_soc_gd32f4"
+}

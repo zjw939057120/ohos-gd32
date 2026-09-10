@@ -1,0 +1,62 @@
+{
+    "product_name": "gd32f470ze",
+    "ohos_version": "OpenHarmony 7.0",
+    "type":"mini",
+    "version": "3.0",
+    "device_company": "gd32",
+    "board": "gd32f470ze",
+    "kernel_type": "liteos_m",
+    "kernel_version": "7.0.0",
+    "subsystems": [
+      {
+        "subsystem": "kernel",
+        "components": [
+          { "component": "liteos_m", "features":[] }
+        ]
+      },
+      {
+        "subsystem": "hiviewdfx",
+        "components": [
+          { "component": "hievent_lite", "features":[] },
+          { "component": "hilog_lite", "features":[] }
+        ]
+      },
+      {
+        "subsystem": "systemabilitymgr",
+        "components": [
+          { "component": "samgr_lite", "features":[] }
+        ]
+      },
+      {
+        "subsystem": "startup",
+        "components": [
+          { "component": "bootstrap_lite", "features":[] },
+          {
+            "component": "init",
+            "features": [
+              "init_feature_begetctl_liteos = true"
+            ]
+          }
+        ]
+      },
+      {
+        "subsystem": "commonlibrary",
+        "components": [
+          {
+            "component": "utils_lite",
+            "features": [
+              "utils_lite_feature_file = true"
+            ]
+          }
+        ]
+      },
+      {
+        "subsystem": "product_gd32f470ze",
+        "components": [
+          { "component": "product_gd32f470ze", "features":[] }
+        ]
+      }
+    ],
+    "third_party_dir": "",
+    "product_adapter_dir": "//vendor/gd32/gd32f470ze/hals"
+  }

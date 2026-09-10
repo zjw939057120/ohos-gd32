@@ -1,0 +1,44 @@
+{
+    "product_name": "gd32f470vg",
+    "ohos_version": "OpenHarmony 7.0",
+    "type":"mini",
+    "version": "3.0",
+    "device_company": "gd32",
+    "board": "gd32f470vg",
+    "kernel_type": "liteos_m",
+    "kernel_version": "7.0.0",
+    "subsystems": [
+      {
+        "subsystem": "kernel",
+        "components": [
+          { "component": "liteos_m", "features":[] }
+        ]
+      },
+      {
+        "subsystem": "hiviewdfx",
+        "components": [
+          { "component": "hievent_lite", "features":[] }
+        ]
+      },
+      {
+        "subsystem": "systemabilitymgr",
+        "components": [
+          { "component": "samgr_lite", "features":[] }
+        ]
+      },
+      {
+        "subsystem": "startup",
+        "components": [
+          { "component": "bootstrap_lite", "features":[] },
+          {
+            "component": "init",
+            "features": [
+              "init_feature_begetctl_liteos = true"
+            ]
+          }
+        ]
+      }
+    ],
+    "third_party_dir": "",
+    "product_adapter_dir": "//vendor/gd32/gd32f470vg/hals"
+  }
