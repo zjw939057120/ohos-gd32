@@ -11,10 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if SOC_GD32F470VG
-
-endif
-
-if SOC_GD32F470ZI
-
-endif
+config BOARD_GD32F470ZI
+    bool "gd32f470zi"
+    depends on SOC_GD32F470ZI
+    help
+        GD32F470ZI board.

@@ -11,10 +11,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if SOC_GD32F470VG
-
-endif
-
-if SOC_GD32F470ZI
+if BOARD_GD32F470ZI
 
 endif

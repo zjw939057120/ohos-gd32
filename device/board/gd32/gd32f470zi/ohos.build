@@ -1,0 +1,10 @@
+{
+  "parts": {
+    "device_gd32f470zi": {
+      "module_list": [
+        "//device/board/gd32/gd32f470zi:gd32f470zi"
+      ]
+    }
+  },
+  "subsystem": "device_gd32f470zi"
+}
