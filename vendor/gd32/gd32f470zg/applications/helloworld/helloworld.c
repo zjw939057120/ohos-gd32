@@ -34,7 +34,7 @@
 
 #define HELLO_TASK_PRIO       11
 #define HELLO_TASK_STACK_SIZE LOSCFG_BASE_CORE_TSK_DEFAULT_STACK_SIZE
-#define HELLO_INTERVAL_TICKS  100U /* 1000 ms at the 100 Hz tick rate */
+#define HELLO_INTERVAL_TICKS  1000U /* 1000 ms at the 100 Hz tick rate */
 
 static VOID *HelloTask(UINT32 arg)
 {
@@ -61,4 +61,4 @@ static void HelloWorldEntry(void)
     }
 }
 
-APP_FEATURE_INIT(HelloWorldEntry);
+SYS_RUN(HelloWorldEntry);

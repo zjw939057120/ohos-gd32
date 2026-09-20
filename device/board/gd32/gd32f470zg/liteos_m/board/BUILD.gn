@@ -51,7 +51,7 @@ config("public") {
 
   ldflags = [
     "-nostartfiles",
-    "-Wl,-T" + rebase_path("gd32f470xE_flash.ld"),
+    "-Wl,-T" + rebase_path("gd32f470xG_flash.ld"),
     "-nostdlib",
   ]
 

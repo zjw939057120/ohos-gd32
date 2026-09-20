@@ -40,7 +40,7 @@
 
 #define LED_TASK_PRIO       11
 #define LED_TASK_STACK_SIZE LOSCFG_BASE_CORE_TSK_DEFAULT_STACK_SIZE
-#define LED_BLINK_TICKS     50U /* 500 ms at the 100 Hz tick rate */
+#define LED_BLINK_TICKS     500U /* 500 ms at the 100 Hz tick rate */
 
 /* LED1 (PA8, LED_GREEN) + LED2 (PE3, LED_BLUE) blink at 1 Hz, active high. */
 static VOID *LedTask(UINT32 arg)
@@ -72,4 +72,4 @@ static void LedExampleEntry(void)
     }
 }
 
-APP_FEATURE_INIT(LedExampleEntry);
+SYS_RUN(LedExampleEntry);

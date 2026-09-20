@@ -14,12 +14,12 @@
  */
 
 /*
- * Linker script for GD32F470ZG + OpenHarmony LiteOS-M.
+ * Linker script for GD32F470ZI + OpenHarmony LiteOS-M.
  *
- * Based on the GigaDevice CMSIS gd32f470xE_flash.ld (V3.3.2, firmware for
+ * Based on the GigaDevice CMSIS gd32f470xI_flash.ld (V3.3.2, firmware for
  * GD32F4xx), with LiteOS-M/OHOS adaptations layered on top. Memory map:
- *   Flash:  512K @ 0x08000000 (GD32F470ZG, xE = 512K)
- *   SRAM:   192K @ 0x20000000
+ *   Flash:  2048K @ 0x08000000 (GD32F470ZI, xI = 2048K)
+ *   SRAM:   704K @ 0x20000000
  *   TCMRAM:  64K @ 0x10000000 (core-coupled TCM, single-cycle; opt-in via
  *            __attribute__((section(".tcmram"))) — see .tcmram note below)
  * Code executes in place from flash (XIP); .data is copied to SRAM by
@@ -52,9 +52,9 @@ ENTRY(Reset_Handler)
 
 SVC_IRQ_STACK_SIZE = 4K;
 FLASH_START         = 0x08000000;
-FLASH_SIZE          = 512K;
+FLASH_SIZE          = 2048K;
 RAM_START           = 0x20000000;
-RAM_SIZE            = 192K;
+RAM_SIZE            = 704K;
 TCMRAM_START        = 0x10000000;
 TCMRAM_SIZE         = 64K;
 
