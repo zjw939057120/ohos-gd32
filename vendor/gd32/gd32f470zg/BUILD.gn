@@ -11,18 +11,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-config SOC_GD32F470ZG
-    bool "gd32f470zg"
-    depends on SOC_SERIES_GD32F470
-    help
-        GigaDevice GD32F470ZG SoC (Cortex-M4F, 1024KB Flash).
-
-config SOC_GD32F470ZI
-    bool "gd32f470zi"
-    depends on SOC_SERIES_GD32F470
-    help
-        GigaDevice GD32F470ZI SoC (Cortex-M4F, 512KB Flash, LQFP144).
-
-config SOC_COMPANY
-    default "gd32" if SOC_GD32F470ZG
-    default "gd32" if SOC_GD32F470ZI
+group("gd32f470zg") {
+  deps = [ "applications:applications" ]
+}

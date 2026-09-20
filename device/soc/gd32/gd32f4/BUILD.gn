@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# GD32F470VG SoC support: CMSIS + standard peripheral library (rcu/gpio/usart/misc)
+# GD32F470ZG SoC support: CMSIS + standard peripheral library (rcu/gpio/usart/misc)
 # and the system clock init. Board code consumes the headers via :public and the
 # compiled objects via the kernel libkernel (this module is a kernel dependency).
 

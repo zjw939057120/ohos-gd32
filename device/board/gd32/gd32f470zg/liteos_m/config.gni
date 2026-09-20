@@ -53,6 +53,7 @@ board_cflags = [
   "-std=c99",
   "-O2",
   "-DGD32F470",
+  "-DGD32F470_HXTAL_8M",
   "-DUSE_STDPERIPH_DRIVER",
   "-D__LITEOS_M__",
   # The OpenHarmony lite tree (musl/kernel/components) was written for
@@ -96,7 +97,7 @@ board_ld_flags += [
 board_include_dirs = [ "//commonlibrary/utils_lite/include" ]
 
 # Board adapter dir for OHOS components.
-board_adapter_dir = "//device/board/gd32/gd32f470vg/liteos_m/board/driver"
+board_adapter_dir = "//device/board/gd32/gd32f470zg/liteos_m/board/driver"
 
 # Sysroot path.
 board_configed_sysroot = ""

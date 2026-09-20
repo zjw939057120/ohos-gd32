@@ -11,8 +11,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-config BOARD_GD32F470VG
-    bool "gd32f470vg"
-    depends on SOC_GD32F470VG
-    help
-        GD32F470VG board.
+# Applications root for the gd32f470zg product. Aggregates the individual
+# application modules under this directory; the product group in
+# vendor/gd32/gd32f470zg/BUILD.gn depends on this target. Add new app
+# subdirectories to deps below.
+group("applications") {
+  deps = [
+    "led:led_app",
+    "helloworld:helloworld",
+  ]
+}

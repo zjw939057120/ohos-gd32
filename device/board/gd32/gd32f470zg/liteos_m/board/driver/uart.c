@@ -14,7 +14,7 @@
  */
 
 /*
- * Debug console UART driver for GD32F470VG.
+ * Debug console UART driver for GD32F470ZG.
  * USART0 on PA9 (TX) / PA10 (RX), AF7, 115200 8N1.
  * Output goes through UartPutc (used by libc/dprintf.c printf); shell input
  * arrives via the USART0 RBNE interrupt which signals g_shellInputEvent.

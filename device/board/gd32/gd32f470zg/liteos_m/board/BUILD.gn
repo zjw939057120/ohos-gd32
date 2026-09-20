@@ -11,7 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Board support: startup, linker, console UART, main, printf and the sample app.
+# Board support: startup, linker, console UART, main and printf.
+# The application lives under vendor/gd32/gd32f470zg/applications and is started
+# via the OHOS bootstrap (OHOS_SystemInit -> SYS_RUN), not compiled here.
 # The GD32F4xx SoC (CMSIS + peripheral library, system_gd32f4xx) lives under
 # device/soc/gd32/gd32f4 and is pulled in as a kernel dependency; its header
 # paths reach this module via the kernel :public config chain.
@@ -25,8 +27,9 @@ kernel_module(module_name) {
 
   sources = [
     "main.c",
-    "startup.S",
+    "startup_gd32f450_470.S",
     "driver/uart.c",
+    "driver/led.c",
     "libc/dprintf.c",
   ]
 
@@ -36,11 +39,6 @@ kernel_module(module_name) {
     "driver",
     "libc",
   ]
-
-  if (!defined(LOSCFG_TEST)) {
-    # kernel's testsuites not enabled, use our own app
-    sources += [ "test/test_demo.c" ]
-  }
 }
 
 config("public") {
@@ -53,7 +51,7 @@ config("public") {
 
   ldflags = [
     "-nostartfiles",
-    "-Wl,-T" + rebase_path("liteos.ld"),
+    "-Wl,-T" + rebase_path("gd32f470xE_flash.ld"),
     "-nostdlib",
   ]
 

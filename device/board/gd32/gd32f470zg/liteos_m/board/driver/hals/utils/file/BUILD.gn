@@ -11,5 +11,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-group("gd32f470vg") {
+# No-FS stub implementation of the board file HAL (see hal_file.c). Picked up
+# automatically by commonlibrary/utils_lite/file when this path exists, so the
+# OHOS param service links without a real file system.
+static_library("hal_file_static") {
+  sources = [ "hal_file.c" ]
+
+  include_dirs = [
+    "//commonlibrary/utils_lite/hals/file",
+    "//commonlibrary/utils_lite/include",
+  ]
 }

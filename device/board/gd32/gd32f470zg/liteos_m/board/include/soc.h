@@ -18,8 +18,8 @@
 
 #include "gd32f4xx.h"
 
-/* GD32F470VG system clock: 240MHz from 25MHz HXTAL
- * (system_clock_240m_25m_hxtal in system_gd32f4xx.c) */
+/* GD32F470ZG system clock: 240MHz from 8MHz HXTAL
+ * (system_clock_240m_8m_hxtal in system_gd32f4xx.c) */
 #define SYSCLK_FREQ        240000000
 
 /* Debug console on USART0 (PA9 TX / PA10 RX) */
