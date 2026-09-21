@@ -27,7 +27,7 @@ kernel_module(module_name) {
 
   sources = [
     "main.c",
-    "startup_gd32f450_470.S",
+    "${ohos_root_path}device/board/gd32/components/startup/startup_gd32f450_470.S",
     "libc/dprintf.c",
   ]
 
@@ -49,7 +49,7 @@ config("public") {
 
   ldflags = [
     "-nostartfiles",
-    "-Wl,-T" + rebase_path("gd32f470xG_flash.ld"),
+    "-Wl,-T" + "${ohos_root_path}device/board/gd32/components/ld/gd32f470xG_flash.ld",
     "-nostdlib",
   ]
 
