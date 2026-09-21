@@ -40,13 +40,22 @@ extern "C" {
 /* g_shellInputEvent is defined by the kernel shell (components/shell/src/base/shmsg.c);
  * it is declared extern in uart.h and signalled from the USART0 RX interrupt. */
 
+#if (LOSCFG_USE_SHELL == 1)
+#define RX_BUF_SIZE                     128
+static uint8_t rx_buf[RX_BUF_SIZE];
+static uint16_t tx_index;
+static uint16_t rx_index;
+
 INT32 UartGetc(VOID)
 {
-    if (RESET == usart_flag_get(USART0, USART_FLAG_RBNE)) {
-        return 0;
+    uint8_t c = 0;
+    if (tx_index != rx_index) {
+        c = rx_buf[tx_index++];
+        tx_index %= RX_BUF_SIZE;     
     }
-    return (INT32)(usart_data_receive(USART0) & 0xFF);
+    return c;
 }
+#endif
 
 INT32 UartPutc(INT32 c, VOID *file)
 {
@@ -61,7 +70,16 @@ INT32 UartPutc(INT32 c, VOID *file)
 VOID UartReceiveHandler(VOID)
 {
     if (RESET != usart_interrupt_flag_get(USART0, USART_INT_FLAG_RBNE)) {
+        uint8_t c = usart_data_receive(USART0); 
+#if (LOSCFG_USE_SHELL == 1)
+        rx_buf[rx_index++] = c;
+        rx_index %= RX_BUF_SIZE;
+        if (rx_index == tx_index) {
+            tx_index++;
+            tx_index %= RX_BUF_SIZE;
+        }
         (void)LOS_EventWrite(&g_shellInputEvent, 0x1);
+#endif
     }
 }
 
