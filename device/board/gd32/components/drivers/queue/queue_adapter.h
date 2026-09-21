@@ -13,17 +13,22 @@
  * limitations under the License.
  */
 
-#ifndef _SOC_H
-#define _SOC_H
+#ifndef _QUEUE_ADAPTER_H
+#define _QUEUE_ADAPTER_H
 
-#include "gd32f4xx.h"
+#include "los_event.h"
+#include "los_compiler.h"
 
-/* GD32F470ZG system clock: 240MHz from 8MHz HXTAL
- * (system_clock_240m_8m_hxtal in system_gd32f4xx.c) */
-#define SYSCLK_FREQ        240000000
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif
+#endif
 
-/* Debug console on USART0 (PA9 TX / PA10 RX) */
-#define UART0_BAUDRATE     115200
-#define Uart0_Rx_IRQn      USART0_IRQn
 
-#endif /* _SOC_H */
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif /* __cplusplus */
+#endif /* __cplusplus */
+#endif /* _QUEUE_ADAPTER_H */

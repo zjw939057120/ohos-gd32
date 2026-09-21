@@ -17,7 +17,7 @@
  * @ingroup kernel
  */
 
-#include "soc.h"
+#include "gd32f4xx.h"
 #include "stdbool.h"
 
 #ifndef _TARGET_CONFIG_H
@@ -27,7 +27,7 @@
                                         System clock module configuration
 =============================================================================*/
 /* GD32F470ZI runs at 240MHz from 8MHz HXTAL (system_clock_240m_8m_hxtal) */
-#define OS_SYS_CLOCK                                        SYSCLK_FREQ
+#define OS_SYS_CLOCK                                        240000000
 #define LOSCFG_BASE_CORE_TICK_PER_SECOND                    (1000UL)
 #define LOSCFG_BASE_CORE_TICK_HW_TIME                       0
 #define LOSCFG_BASE_CORE_TICK_WTIMER                        0

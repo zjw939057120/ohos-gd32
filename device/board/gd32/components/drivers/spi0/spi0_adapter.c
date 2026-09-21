@@ -13,17 +13,26 @@
  * limitations under the License.
  */
 
-#ifndef _SOC_H
-#define _SOC_H
+/*
+ * Debug console UART driver for GD32F470ZG.
+ * USART0 on PA9 (TX) / PA10 (RX), AF7, 115200 8N1.
+ * Output goes through UartPutc (used by libc/dprintf.c printf); shell input
+ * arrives via the USART0 RBNE interrupt which signals g_shellInputEvent.
+ */
 
-#include "gd32f4xx.h"
+#include "spi0_adapter.h"
+#include "los_interrupt.h"
+#include "los_event.h"
+#include "gpio_pin.h"
 
-/* GD32F470ZI system clock: 240MHz from 8MHz HXTAL
- * (system_clock_240m_8m_hxtal in system_gd32f4xx.c) */
-#define SYSCLK_FREQ        240000000
+#ifdef __cplusplus
+#if __cplusplus
+extern "C" {
+#endif
+#endif
 
-/* Debug console on USART0 (PA9 TX / PA10 RX) */
-#define UART0_BAUDRATE     115200
-#define Uart0_Rx_IRQn      USART0_IRQn
-
-#endif /* _SOC_H */
+#ifdef __cplusplus
+#if __cplusplus
+}
+#endif /* __cplusplus */
+#endif /* __cplusplus */

@@ -20,7 +20,9 @@
  */
 
 #include "led.h"
-#include "soc.h"
+#include "los_interrupt.h"
+#include "los_event.h"
+#include "gpio_pin.h"
 
 /* LED1: PA8, LED2: PE3 */
 #define LED1_PORT           GPIOA

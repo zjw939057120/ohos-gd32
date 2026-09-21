@@ -21,9 +21,10 @@
  */
 
 #include "uart.h"
-#include "soc.h"
 #include "los_interrupt.h"
 #include "los_event.h"
+#include "gpio_pin.h"
+
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -77,7 +78,7 @@ VOID UartInit(VOID)
 
     /* USART0: 115200 8N1, default word length / stop bit */
     usart_deinit(USART0);
-    usart_baudrate_set(USART0, UART0_BAUDRATE);
+    usart_baudrate_set(USART0, 115200);
     usart_receive_config(USART0, USART_RECEIVE_ENABLE);
     usart_transmit_config(USART0, USART_TRANSMIT_ENABLE);
     usart_enable(USART0);

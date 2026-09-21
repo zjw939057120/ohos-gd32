@@ -53,7 +53,7 @@ board_cflags = [
   "-std=c99",
   "-O2",
   "-DGD32F470",
-  "-DGD32F470_HXTAL_25M",
+  "-DGD32F470_HXTAL_8M",
   "-DUSE_STDPERIPH_DRIVER",
   "-D__LITEOS_M__",
   # The OpenHarmony lite tree (musl/kernel/components) was written for

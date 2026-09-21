@@ -27,7 +27,7 @@ kernel_module(module_name) {
 
   sources = [
     "main.c",
-    "${ohos_root_path}device/board/gd32/components/startup/startup_gd32f450_470.S",
+    "${ohos_root_path}/device/board/gd32/components/startup/startup_gd32f450_470.S",
     "libc/dprintf.c",
   ]
 
