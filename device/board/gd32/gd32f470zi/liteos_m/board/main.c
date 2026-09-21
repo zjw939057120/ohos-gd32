@@ -18,6 +18,8 @@
 #include "uart.h"
 #include "los_debug.h"
 #include "gpio_adapter.h"
+#include "rtc_adapter.h"
+#include "watchdog_adapter.h"
 
 unsigned int LosShellInit(void);
 
@@ -29,6 +31,20 @@ unsigned int LosShellInit(void);
  */
 extern void OHOS_SystemInit(void);
 
+void init_hw(void)
+{
+
+}
+
+void init_hwi(void)
+{
+     // 初始化RTC
+    init_rtc();
+    // 初始化看门狗
+    init_watchdog();
+    // 初始化按键
+	init_key();
+}
 /*****************************************************************************
  Function    : main
  Description : Main function entry
@@ -41,9 +57,10 @@ LITE_OS_SEC_TEXT_INIT int main(void)
     unsigned int ret;
     // 初始化GPIO
     init_gpio();
-
     // 初始化UART
     UartInit();
+    // 初始化硬件外设
+    init_hw();
 
     ret = LOS_KernelInit();
     if (ret != LOS_OK) {
@@ -53,6 +70,8 @@ LITE_OS_SEC_TEXT_INIT int main(void)
     
     // 注册UART接收中断
     Uart0RxIrqRegister();
+    // 初始化硬件中断
+    init_hwi();
 
 #if (LOSCFG_USE_SHELL == 1)
     ret = LosShellInit();

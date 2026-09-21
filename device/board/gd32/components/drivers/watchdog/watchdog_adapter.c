@@ -24,12 +24,63 @@
 #include "los_interrupt.h"
 #include "los_event.h"
 #include "gpio_pin.h"
+#include "gpio_adapter.h"
 
 #ifdef __cplusplus
 #if __cplusplus
 extern "C" {
 #endif
 #endif
+
+#define TASK_STACK_SIZE 2048
+#define TASK_PRIORITY 3 /* 值越大，优先级越高 */
+
+VOID watchdog_task(VOID)
+{
+    while (1)
+    {
+        /* 刷新看门狗计数器 */
+        fwdgt_counter_reload();
+        /* 闪烁LED */
+		gpio_toggle(RUNSTA_LED_INDEX);
+        LOS_TaskDelay(1000);
+    }
+}
+
+void init_watchdog(void)
+{
+    /* enable IRC32K */
+    rcu_osci_on(RCU_IRC32K);
+    
+    /* wait till IRC32K is ready */
+    while(SUCCESS != rcu_osci_stab_wait(RCU_IRC32K)){
+    }
+
+    /* confiure FWDGT counter clock: 2500 * 64 / 32000 = 5s */
+    fwdgt_config(2500, FWDGT_PSC_DIV64);
+    
+    fwdgt_enable();
+
+    /* check if the system has resumed from FWDGT reset */
+    if (RESET != rcu_flag_get(RCU_FLAG_FWDGTRST)){
+        /* clear the FWDGT reset flag */
+        rcu_all_reset_flag_clear();
+	}
+
+    UINT32 ret;
+    UINT32 g_task_id;
+    TSK_INIT_PARAM_S g_task = {0};
+
+    g_task.pfnTaskEntry = (TSK_ENTRY_FUNC)watchdog_task;
+    g_task.uwStackSize = TASK_STACK_SIZE;
+    g_task.pcName = "watchdog_task";
+    g_task.usTaskPrio = TASK_PRIORITY;
+    ret = LOS_TaskCreate(&g_task_id, &g_task);
+    if (ret != LOS_OK)
+    {
+        printf("watchdog_task create failed.\n");
+    }
+}
 
 #ifdef __cplusplus
 #if __cplusplus

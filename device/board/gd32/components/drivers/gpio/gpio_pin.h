@@ -20,8 +20,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include "los_interrupt.h"
 #include "los_event.h"
 #include "los_compiler.h"
+#include "los_task.h"
 
 #ifdef __cplusplus
 #if __cplusplus
