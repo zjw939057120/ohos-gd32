@@ -52,9 +52,9 @@ ENTRY(Reset_Handler)
 
 SVC_IRQ_STACK_SIZE = 4K;
 FLASH_START         = 0x08000000;
-FLASH_SIZE          = 512K;
+FLASH_SIZE          = 1024K;
 RAM_START           = 0x20000000;
-RAM_SIZE            = 192K;
+RAM_SIZE            = 448K;
 TCMRAM_START        = 0x10000000;
 TCMRAM_SIZE         = 64K;
 

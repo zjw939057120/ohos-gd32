@@ -28,8 +28,6 @@ kernel_module(module_name) {
   sources = [
     "main.c",
     "startup_gd32f450_470.S",
-    "driver/uart.c",
-    "driver/led.c",
     "libc/dprintf.c",
   ]
 
