@@ -17,6 +17,7 @@
 #include "los_config.h"
 #include "uart.h"
 #include "los_debug.h"
+#include "gpio_adapter.h"
 
 unsigned int LosShellInit(void);
 
@@ -38,7 +39,10 @@ extern void OHOS_SystemInit(void);
 LITE_OS_SEC_TEXT_INIT int main(void)
 {
     unsigned int ret;
+    // 初始化GPIO
+    init_gpio();
 
+    // 初始化UART
     UartInit();
 
     ret = LOS_KernelInit();
@@ -46,7 +50,8 @@ LITE_OS_SEC_TEXT_INIT int main(void)
         printf("LiteOS kernel init failed! ERROR: 0x%x\n", ret);
         goto EXIT;
     }
-
+    
+    // 注册UART接收中断
     Uart0RxIrqRegister();
 
 #if (LOSCFG_USE_SHELL == 1)

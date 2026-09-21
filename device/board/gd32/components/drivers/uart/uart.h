@@ -16,6 +16,10 @@
 #ifndef _UART_H
 #define _UART_H
 
+#include "gd32f4xx.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 #include "los_event.h"
 #include "los_compiler.h"
 

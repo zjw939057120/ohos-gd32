@@ -16,6 +16,11 @@
 #ifndef _LED_H
 #define _LED_H
 
+#include "gd32f4xx.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include "los_event.h"
 #include "los_compiler.h"
 
 #ifdef __cplusplus

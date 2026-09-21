@@ -16,6 +16,10 @@
 #ifndef _QUEUE_ADAPTER_H
 #define _QUEUE_ADAPTER_H
 
+#include "gd32f4xx.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 #include "los_event.h"
 #include "los_compiler.h"
 
