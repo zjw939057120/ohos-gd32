@@ -15,7 +15,7 @@
 
 /*
  * Debug console UART driver for GD32F470ZG.
- * USART0 on PA9 (TX) / PA10 (RX), AF7, 115200 8N1.
+ * USART0 on PA9 (TX) / PA10 (RX), AF7, 9600 8N1.
  * Output goes through UartPutc (used by libc/dprintf.c printf); shell input
  * arrives via the USART0 RBNE interrupt which signals g_shellInputEvent.
  */
@@ -94,9 +94,9 @@ VOID UartInit(VOID)
     gpio_mode_set(GPIOC, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART_TX_PIN | UART_RX_PIN);
     gpio_output_options_set(GPIOC, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, UART_TX_PIN | UART_RX_PIN);
 
-    /* USART5: 115200 8N1, default word length / stop bit */
+    /* USART5: 9600 8N1, default word length / stop bit */
     usart_deinit(USART5);
-    usart_baudrate_set(USART5, 115200);
+    usart_baudrate_set(USART5, 9600);
     usart_receive_config(USART5, USART_RECEIVE_ENABLE);
     usart_transmit_config(USART5, USART_TRANSMIT_ENABLE);
     usart_enable(USART5);

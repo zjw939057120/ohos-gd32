@@ -58,8 +58,15 @@ LITE_OS_SEC_TEXT_INIT int main(void)
     unsigned int ret;
     // 初始化GPIO
     init_gpio();
+    
+    // 初始化UART或RS485
+#if (LOSCFG_USE_SHELL == 1)
     // 初始化UART
     UartInit();
+#else
+    // 初始化RS485
+    init_rs485();
+#endif
     // 初始化硬件外设
     init_hw();
 
@@ -68,9 +75,15 @@ LITE_OS_SEC_TEXT_INIT int main(void)
         printf("LiteOS kernel init failed! ERROR: 0x%x\n", ret);
         goto EXIT;
     }
-    
+
+    // 注册UART或RS485接收中断
+#if (LOSCFG_USE_SHELL == 1)
     // 注册UART接收中断
     UartRxIrqRegister();
+#else
+    // 注册RS485接收中断
+    rs485_irq_register();
+#endif
     // 初始化硬件中断
     init_hwi();
 

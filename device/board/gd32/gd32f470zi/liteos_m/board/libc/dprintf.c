@@ -40,9 +40,11 @@ int printf(char const *fmt, ...)
     int len = vsnprintf_s(buf, sizeof(buf), BUFSIZE - 1, fmt, ap);
     va_end(ap);
     if (len > 0) {
-        dputs(buf, UartPutc, 0);
+        rs485_3_send((uint8_t *)buf, len);
+        // dputs(buf, UartPutc, 0);
     } else {
-        dputs("printf error!\n", UartPutc, 0);
+        rs485_3_send((uint8_t *)"printf error!\n", 13);
+        // dputs("printf error!\n", UartPutc, 0);
     }
     return len;
 }
