@@ -29,6 +29,40 @@ extern "C" {
 #endif
 #endif
 
+// TLC2543 片选引脚 (PF11)
+#define TLC2543_CS_LOW()    gpio_bit_reset(GPIOF, GPIO_PIN_11)
+#define TLC2543_CS_HIGH()   gpio_bit_set(GPIOF, GPIO_PIN_11)
+// AD5318 片选引脚 (PB2)
+#define AD5318_CS_LOW()   gpio_bit_reset(GPIOB, GPIO_PIN_2)
+#define AD5318_CS_HIGH()  gpio_bit_set(GPIOB, GPIO_PIN_2)
+
+/**
+ * @brief 初始化 TLC2543 SPI 通信
+ *
+ */
+void init_tlc2543_spi(void);
+
+/**
+ * @brief 从 TLC2543 读取 ADC 数据
+ *
+ * @param chan ADC 通道
+ * @return uint16_t 读取到的 ADC 数据
+ */
+uint16_t tlc2543_read_adc(uint8_t chan);
+
+/**
+ * @brief 初始化 AD5318 SPI 通信
+ *
+ */
+void init_ad5318_spi(void);
+
+/**
+ * @brief 向 AD5318 写入 DAC 数据
+ *
+ * @param channel DAC 通道
+ * @param data DAC 数据
+ */
+void ad5318_write_dac(uint8_t channel, uint16_t data);
 
 #ifdef __cplusplus
 #if __cplusplus

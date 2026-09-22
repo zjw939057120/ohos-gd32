@@ -18,8 +18,13 @@
 #include "uart.h"
 #include "los_debug.h"
 #include "gpio_adapter.h"
+#include "lfs_adapter.h"
+#include "queue_adapter.h"
 #include "rs485_adapter.h"
 #include "rtc_adapter.h"
+#include "spi0_adapter.h"
+#include "spi1_adapter.h"
+#include "uart.h"
 #include "watchdog_adapter.h"
 
 unsigned int LosShellInit(void);
@@ -34,11 +39,18 @@ extern void OHOS_SystemInit(void);
 
 void init_hw(void)
 {
-
+    // 初始化 TLC2543 SPI 通信
+    init_tlc2543_spi();
+    // 初始化 AD5318 SPI 通信
+    init_ad5318_spi();
 }
 
 void init_hwi(void)
 {
+    // 初始化队列
+    init_queue();
+    // 注册RS485接收中断
+    rs485_irq_register();
      // 初始化RTC
     init_rtc();
     // 初始化看门狗
@@ -58,15 +70,12 @@ LITE_OS_SEC_TEXT_INIT int main(void)
     unsigned int ret;
     // 初始化GPIO
     init_gpio();
-    
-    // 初始化UART或RS485
 #if (LOSCFG_USE_SHELL == 1)
     // 初始化UART
     UartInit();
-#else
+#endif
     // 初始化RS485
     init_rs485();
-#endif
     // 初始化硬件外设
     init_hw();
 
@@ -76,17 +85,21 @@ LITE_OS_SEC_TEXT_INIT int main(void)
         goto EXIT;
     }
 
-    // 注册UART或RS485接收中断
 #if (LOSCFG_USE_SHELL == 1)
     // 注册UART接收中断
     UartRxIrqRegister();
-#else
-    // 注册RS485接收中断
-    rs485_irq_register();
 #endif
     // 初始化硬件中断
     init_hwi();
-
+    // 初始化LITTLEFS
+#if (LOSCFG_SUPPORT_LITTLEFS == 1)
+    lfs_init();
+#endif
+    // 初始化以太网
+#if (LOSCFG_NET_LWIP == 1)
+    enet_adapter_init(NULL);
+#endif
+    // 初始化Shell
 #if (LOSCFG_USE_SHELL == 1)
     ret = LosShellInit();
     if (ret != LOS_OK) {

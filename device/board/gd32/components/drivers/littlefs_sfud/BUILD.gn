@@ -1,4 +1,4 @@
-# Copyright (c) 2026 Huawei Device Co., Ltd.
+# Copyright (c) 2023-2023 Huawei Device Co., Ltd. All rights reserved.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,39 +12,21 @@
 # limitations under the License.
 
 import("//kernel/liteos_m/liteos.gni")
-module_name = get_path_info(rebase_path("."), "name")
-module_group(module_name) {
-  if (defined(LOSCFG_BOARD_GD32F470ZG)){
-    modules = [
-      "ethernet",
-      "led",
-      "littlefs_sfud",
-      "uart",
-      "gpio",
-      "misc",
-      "queue",
-      "rs485",
-      "rtc",
-      "spi0",
-      "spi1",
-      "watchdog"
-    ]
-  }
 
-  if (defined(LOSCFG_BOARD_GD32F470ZI)){
-    modules = [
-      "ethernet",
-      "led",
-      "littlefs_sfud",
-      "uart",
-      "gpio",
-      "misc",
-      "queue",
-      "rs485",
-      "rtc",
-      "spi0",
-      "spi1",
-      "watchdog"
+module_name = get_path_info(rebase_path("."), "name")
+kernel_module(module_name) {
+  sources = [
+    "sfud/port/sfud_gd32_port.c",
+    "sfud/src/sfud_sfdp.c",
+    "sfud/src/sfud.c",
+    "lfs_adapter.c",
+    "file_test.c",
+  ]
+}
+
+config("public") {
+    include_dirs =  [     
+      ".",
+      "./sfud/inc",
     ]
-  }
 }

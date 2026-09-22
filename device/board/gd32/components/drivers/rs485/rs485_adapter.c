@@ -211,10 +211,14 @@ void rs485_3_irq_register(void)
 
 void rs485_irq_register(void)
 {
-    //注册RS485中断
+    // 注册RS485_1中断
     rs485_1_irq_register();
+    // 注册RS485_2中断
     rs485_2_irq_register();
+#if (LOSCFG_USE_SHELL != 1)
+    // 注册RS485_3中断
     rs485_3_irq_register();
+#endif
 }
 
 void init_rs485_1(void)
@@ -312,10 +316,14 @@ void init_rs485_3(void)
 
 void init_rs485(void)
 {
-    //初始化RS485
+    // 初始化RS485_1
     init_rs485_1();
+    // 初始化RS485_2
     init_rs485_2();
+#if (LOSCFG_USE_SHELL != 1)
+    // 初始化RS485_3
     init_rs485_3();
+#endif
 }
 
 #ifdef __cplusplus

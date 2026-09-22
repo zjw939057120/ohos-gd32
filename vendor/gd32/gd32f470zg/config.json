@@ -34,7 +34,8 @@
           {
             "component": "init",
             "features": [
-              "init_feature_begetctl_liteos = true"
+              "init_feature_begetctl_liteos = true",
+              "init_lite_use_posix_file_api = true"
             ]
           }
         ]
