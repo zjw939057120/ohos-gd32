@@ -23,13 +23,70 @@
 #include "queue_adapter.h"
 #include "los_interrupt.h"
 #include "los_event.h"
-#include "gpio_pin.h"
+#include "pin_config.h"
 
 #ifdef __cplusplus
 #if __cplusplus
 extern "C" {
 #endif
 #endif
+
+UINT32 rs485_1 = 0;
+UINT32 rs485_2 = 0;
+UINT32 rs485_3 = 0;
+
+UINT32 queue_create(CHAR *queueName,UINT16 len,UINT32 *queueID,UINT32 flags,UINT16 maxMsgSize){
+	return LOS_QueueCreate(queueName,len,queueID,flags,maxMsgSize);
+}
+
+UINT32 queue_send(UINT32 queueID,VOID *bufferAddr,UINT32 bufferSize){
+	return LOS_QueueWriteCopy(queueID,bufferAddr,bufferSize,0);
+}
+
+UINT32 queue_recv(UINT32 queueID,VOID *bufferAddr,UINT32 *bufferSize){
+	return LOS_QueueReadCopy(queueID,bufferAddr,bufferSize,LOS_WAIT_FOREVER);
+}
+
+void init_queue(void)
+{
+    UINT32 ret = 0;
+    ret = queue_create("rs485_1", MAX_QUEUE_LEN, &rs485_1, 0, MAX_MSG_SIZE);
+    if(ret != LOS_OK){
+        printf("rs485_1 queue create failed\n");
+    }
+    ret = queue_create("rs485_2", MAX_QUEUE_LEN, &rs485_2, 0, MAX_MSG_SIZE);
+    if(ret != LOS_OK){
+        printf("rs485_2 queue create failed\n");
+    }
+    ret = queue_create("rs485_3", MAX_QUEUE_LEN, &rs485_3, 0, MAX_MSG_SIZE);
+    if(ret != LOS_OK){
+        printf("rs485_3 queue create failed\n");
+    }
+}
+
+UINT32 rs485_1_mq_send(VOID *bufferAddr,UINT32 bufferSize){
+	return queue_send(rs485_1,bufferAddr,bufferSize);
+}
+
+UINT32 rs485_1_mq_recv(VOID *bufferAddr,UINT32 *bufferSize){
+	return queue_recv(rs485_1,bufferAddr,bufferSize);
+}
+
+UINT32 rs485_2_mq_send(VOID *bufferAddr,UINT32 bufferSize){
+	return queue_send(rs485_2,bufferAddr,bufferSize);
+}
+
+UINT32 rs485_2_mq_recv(VOID *bufferAddr,UINT32 *bufferSize){
+	return queue_recv(rs485_2,bufferAddr,bufferSize);
+}
+
+UINT32 rs485_3_mq_send(VOID *bufferAddr,UINT32 bufferSize){
+	return queue_send(rs485_3,bufferAddr,bufferSize);
+}
+
+UINT32 rs485_3_mq_recv(VOID *bufferAddr,UINT32 *bufferSize){
+	return queue_recv(rs485_3,bufferAddr,bufferSize);
+}
 
 #ifdef __cplusplus
 #if __cplusplus

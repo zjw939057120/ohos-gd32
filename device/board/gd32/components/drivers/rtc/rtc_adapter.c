@@ -23,7 +23,7 @@
 #include "rtc_adapter.h"
 #include "los_interrupt.h"
 #include "los_event.h"
-#include "gpio_pin.h"
+#include "pin_config.h"
 #include "rtc_time_hook.h"
 #include <time.h>
 
@@ -62,7 +62,7 @@ int init_rtc_hw(void)
     if (BKP_VALUE != RTC_BKP0){
         uint16_t year;
         uint8_t month, date, hour, minute, second;
-        get_build_time(&year, &month, &date, &hour, &minute, &second);
+        parse_compile_time(&year, &month, &date, &hour, &minute, &second);
         rtc_setup(year, month, date, hour, minute, second);
     }else{
         /* detect the reset source */

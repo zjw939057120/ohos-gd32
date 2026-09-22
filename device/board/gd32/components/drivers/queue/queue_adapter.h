@@ -30,6 +30,70 @@ extern "C" {
 #endif
 
 
+#include <stdio.h>
+#include "gd32f4xx.h"
+#include "gd32f4xx_usart.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define MAX_QUEUE_LEN 10  /* 最大队列长度 */
+#define MAX_MSG_SIZE 255  /* 最大消息大小 */
+/**
+ * @brief 初始化队列
+ * 
+ */
+void init_queue(void);
+/**
+ * @brief 写入RS485_1队列
+ * 
+ * @param bufferAddr 数据指针
+ * @param bufferSize 数据大小
+ * @return UINT32 0 成功
+ */
+UINT32 rs485_1_mq_send(VOID *bufferAddr,UINT32 bufferSize);
+/**
+ * @brief 读取RS485_1队列数据
+ * 
+ * @param bufferAddr 数据指针
+ * @param bufferSize 数据大小
+ * @return UINT32 0 成功
+ */
+UINT32 rs485_1_mq_recv(VOID *bufferAddr,UINT32 *bufferSize);
+/**
+ * @brief 写入RS485_2队列
+ * 
+ * @param bufferAddr 数据指针
+ * @param bufferSize 数据大小
+ * @return UINT32 0 成功
+ */
+UINT32 rs485_2_mq_send(VOID *bufferAddr,UINT32 bufferSize);
+/**
+ * @brief 读取RS485_2队列数据
+ * 
+ * @param bufferAddr 数据指针
+ * @param bufferSize 数据大小
+ * @return UINT32 0 成功
+ */
+UINT32 rs485_2_mq_recv(VOID *bufferAddr,UINT32 *bufferSize);
+/**
+ * @brief 写入RS485_3队列
+ * 
+ * @param bufferAddr 数据指针
+ * @param bufferSize 数据大小
+ * @return UINT32 0 成功
+ */
+UINT32 rs485_3_mq_send(VOID *bufferAddr,UINT32 bufferSize);
+/**
+ * @brief 读取RS485_3队列数据
+ * 
+ * @param bufferAddr 数据指针
+ * @param bufferSize 数据大小
+ * @return UINT32 0 成功
+ */
+UINT32 rs485_3_mq_recv(VOID *bufferAddr,UINT32 *bufferSize);
+
 #ifdef __cplusplus
 #if __cplusplus
 }

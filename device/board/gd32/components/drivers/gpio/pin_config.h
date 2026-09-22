@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef _GPIO_PIN_H
-#define _GPIO_PIN_H
+#ifndef _PIN_CONFIG_H
+#define _PIN_CONFIG_H
 
 #include "gd32f4xx.h"
 #include <stdio.h>
@@ -210,4 +210,4 @@ extern "C" {
 }
 #endif /* __cplusplus */
 #endif /* __cplusplus */
-#endif /* _GPIO_PIN_H */
+#endif /* _PIN_CONFIG_H */

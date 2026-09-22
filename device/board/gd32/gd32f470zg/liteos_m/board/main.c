@@ -18,6 +18,7 @@
 #include "uart.h"
 #include "los_debug.h"
 #include "gpio_adapter.h"
+#include "rs485_adapter.h"
 #include "rtc_adapter.h"
 #include "watchdog_adapter.h"
 
@@ -69,7 +70,7 @@ LITE_OS_SEC_TEXT_INIT int main(void)
     }
     
     // 注册UART接收中断
-    Uart0RxIrqRegister();
+    UartRxIrqRegister();
     // 初始化硬件中断
     init_hwi();
 

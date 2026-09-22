@@ -29,6 +29,39 @@ extern "C" {
 #endif
 #endif
 
+/*
+ * @brief 初始化UART
+ * @param None
+ * @return None
+ */
+void init_rs485(void);
+
+/*
+ * @brief 注册UART中断
+ * @param None
+ * @return None
+ */
+void rs485_irq_register(void);
+
+/*
+ * @brief 发送数据
+ * @param data 数据指针
+ * @param len 数据长度
+ * @return None
+ */
+void rs485_1_send(uint8_t *data, int len);
+void rs485_2_send(uint8_t *data, int len);
+void rs485_3_send(uint8_t *data, int len);
+
+/*
+ * @brief 接收数据
+ * @param data 数据指针
+ * @param len 数据长度
+ * @return None
+ */
+void rs485_1_recv(uint8_t *data, int len);
+void rs485_2_recv(uint8_t *data, int len);
+void rs485_3_recv(uint8_t *data, int len);
 
 #ifdef __cplusplus
 #if __cplusplus

@@ -23,7 +23,7 @@
 #include "watchdog_adapter.h"
 #include "los_interrupt.h"
 #include "los_event.h"
-#include "gpio_pin.h"
+#include "pin_config.h"
 #include "gpio_adapter.h"
 
 #ifdef __cplusplus
