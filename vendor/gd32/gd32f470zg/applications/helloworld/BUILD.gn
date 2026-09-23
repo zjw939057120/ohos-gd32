@@ -13,7 +13,7 @@
 
 import("//kernel/liteos_m/liteos.gni")
 
-# Hello World sample application for GD32F470ZG, registered via APP_FEATURE_INIT.
+# Hello World sample application for GD32F470ZG, registered via SYS_RUN.
 # Prints "Hello World!" on the debug console (USART0) once per second using the
 # native LiteOS task API (LOS_TaskCreate/LOS_TaskDelay). The entry is launched by
 # the bootstrap service (BOOT_SYS_COMPLETED) during OHOS_SystemInit() at boot.

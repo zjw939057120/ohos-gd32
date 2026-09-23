@@ -26,7 +26,7 @@
  * 500 ms = 50 ticks; LOS_TaskDelay(50) on + LOS_TaskDelay(50) off gives one
  * cycle/second.
  *
- * APP_FEATURE_INIT() places LedExampleEntry into the .zinitcall.app.feature
+ * SYS_RUN() places LedExampleEntry into the .zinitcall.app.feature
  * init table. The bootstrap service (bootstrap_service.c, itself registered
  * via SYS_SERVICE_INIT) iterates that table on BOOT_SYS_COMPLETED -- reached
  * through OHOS_SystemInit() -> SAMGR_Bootstrap() at boot -- so the entry needs

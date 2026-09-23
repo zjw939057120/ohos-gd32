@@ -22,6 +22,7 @@
 #include <stdbool.h>
 #include "los_event.h"
 #include "los_compiler.h"
+#include "pin_config.h"
 
 #ifdef __cplusplus
 #if __cplusplus

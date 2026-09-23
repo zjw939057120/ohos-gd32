@@ -21,7 +21,7 @@
  * The LiteOS-M tick rate is 100 Hz (LOSCFG_BASE_CORE_TICK_PER_SECOND), so
  * 1000 ms = 100 ticks.
  *
- * APP_FEATURE_INIT() places HelloWorldEntry into the .zinitcall.app.feature
+ * SYS_RUN() places HelloWorldEntry into the .zinitcall.app.feature
  * init table. The bootstrap service (bootstrap_service.c, itself registered
  * via SYS_SERVICE_INIT) iterates that table on BOOT_SYS_COMPLETED -- reached
  * through OHOS_SystemInit() -> SAMGR_Bootstrap() at boot -- so the entry needs

@@ -13,7 +13,7 @@
 
 import("//kernel/liteos_m/liteos.gni")
 
-# LED blink application (1 Hz) for GD32F470ZG, registered via APP_FEATURE_INIT.
+# LED blink application (1 Hz) for GD32F470ZG, registered via SYS_RUN.
 # GPIO allocation: PA8=LED_GREEN, PE3=LED_BLUE (see docs/io_allocation.md).
 # The entry is launched by the bootstrap service (BOOT_SYS_COMPLETED) during
 # OHOS_SystemInit() at boot, so no module_switch gating is required -- it does
@@ -22,7 +22,7 @@ kernel_module("led_app") {
   sources = [ "led_app.c" ]
 
   include_dirs = [
-    # ohos_init.h (APP_FEATURE_INIT) and led.h (board LED driver, PA8/PE3).
+    # ohos_init.h (SYS_RUN) and led.h (board LED driver, PA8/PE3).
     # los_task.h reaches this module via the kernel :public config chain
     # (kernel_module set_defaults -> kernel:public).
     "//commonlibrary/utils_lite/include",
