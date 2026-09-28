@@ -20,6 +20,10 @@
 #include "los_debug.h"
 #include "los_interrupt.h"
 
+#if (LOSCFG_USE_SHELL != 1)
+#include "SEGGER_RTT.h"
+#endif
+
 static void dputs(char const *s, int (*pFputc)(int n, FILE *cookie), void *cookie)
 {
     unsigned int intSave;
@@ -33,6 +37,16 @@ static void dputs(char const *s, int (*pFputc)(int n, FILE *cookie), void *cooki
 
 int printf(char const *fmt, ...)
 {
+#if (LOSCFG_USE_SHELL != 1)
+  int r;
+  va_list ParamList;
+
+  va_start(ParamList, fmt);
+  r = SEGGER_RTT_vprintf(0, fmt, &ParamList);
+  va_end(ParamList);
+  return r;
+#else
+
 #define BUFSIZE  256
     char buf[BUFSIZE] = { 0 };
     va_list ap;
@@ -43,8 +57,9 @@ int printf(char const *fmt, ...)
         rs485_3_send((uint8_t *)buf, len);
         // dputs(buf, UartPutc, 0);
     } else {
-        rs485_3_send((uint8_t *)"printf error!\n", 13);
+        rs485_3_send((uint8_t *)"printf error!\n", 14);
         // dputs("printf error!\n", UartPutc, 0);
     }
     return len;
+#endif
 }

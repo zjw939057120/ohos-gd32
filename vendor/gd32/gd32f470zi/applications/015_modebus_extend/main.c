@@ -7,8 +7,9 @@
 #define TASK_STACK_SIZE     4096
 #define TASK_PRIORITY       6                   /* 值越大，优先级越高 */
 
-/* rs485_3和shell不共存 */
+/*禁用shell命令 */
 #if (LOSCFG_USE_SHELL != 1)
+
 static void *thread_modebus_extend_task(unsigned int arg)
 {
 	UINT32 ret = 0;
@@ -42,7 +43,6 @@ static void modebus_extend_task_init(void)
 		return;
 	}
 }
-
 
 SYS_RUN(modebus_extend_task_init);
 #endif

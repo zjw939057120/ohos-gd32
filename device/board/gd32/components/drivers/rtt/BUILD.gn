@@ -12,41 +12,17 @@
 # limitations under the License.
 
 import("//kernel/liteos_m/liteos.gni")
-module_name = get_path_info(rebase_path("."), "name")
-module_group(module_name) {
-  if (defined(LOSCFG_BOARD_GD32F470ZG)){
-    modules = [
-      "ethernet",
-      "led",
-      "littlefs_sfud",
-      "uart",
-      "gpio",
-      "misc",
-      "queue",
-      "rs485",
-      "rtc",
-      "rtt",
-      "spi0",
-      "spi1",
-      "watchdog"
-    ]
-  }
 
-  if (defined(LOSCFG_BOARD_GD32F470ZI)){
-    modules = [
-      "ethernet",
-      "led",
-      "littlefs_sfud",
-      "uart",
-      "gpio",
-      "misc",
-      "queue",
-      "rs485",
-      "rtc",
-      "rtt",
-      "spi0",
-      "spi1",
-      "watchdog"
+module_name = get_path_info(rebase_path("."), "name")
+kernel_module(module_name) {
+  sources = [
+    "SEGGER_RTT_printf.c",
+    "SEGGER_RTT.c"
+  ]
+}
+
+config("public") {
+    include_dirs =  [     
+      ".",
     ]
-  }
 }
