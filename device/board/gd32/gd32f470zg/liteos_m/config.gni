@@ -94,7 +94,10 @@ board_ld_flags += [
 ]
 
 # Board related headfiles search path.
-board_include_dirs = [ "//commonlibrary/utils_lite/include" ]
+board_include_dirs = [
+  "//commonlibrary/utils_lite/include",
+  "//base/startup/bootstrap_lite/services/source",
+]
 
 # Board adapter dir for OHOS components.
 board_adapter_dir = "//device/board/gd32/gd32f470zg/liteos_m/board/driver"

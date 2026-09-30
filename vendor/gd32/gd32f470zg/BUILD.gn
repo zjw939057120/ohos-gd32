@@ -12,5 +12,7 @@
 # limitations under the License.
 
 group("gd32f470zg") {
+if (!build_xts) {
   deps = [ "applications:applications" ]
+}
 }

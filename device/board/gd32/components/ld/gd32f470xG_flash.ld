@@ -183,6 +183,22 @@ SECTIONS
       KEEP (*(.zinitcall.app.feature4.init))
       __zinitcall_app_feature_end = .;
       . = ALIGN(4);
+	  __zinitcall_test_start = .;
+	  KEEP (*(.zinitcall.test0.init))
+	  KEEP (*(.zinitcall.test1.init))
+	  KEEP (*(.zinitcall.test2.init))
+	  KEEP (*(.zinitcall.test3.init))
+	  KEEP (*(.zinitcall.test4.init))
+	  __zinitcall_test_end = .;
+      . = ALIGN(4);
+	  __zinitcall_exit_start = .;
+	  KEEP (*(.zinitcall.exit0.init))
+	  KEEP (*(.zinitcall.exit1.init))
+	  KEEP (*(.zinitcall.exit2.init))
+	  KEEP (*(.zinitcall.exit3.init))
+	  KEEP (*(.zinitcall.exit4.init))
+	  __zinitcall_exit_end = .;
+      . = ALIGN(4);
   } > FLASH
 
   /* ARM attributes */

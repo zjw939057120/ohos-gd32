@@ -52,6 +52,26 @@ config("public") {
     "-Wl,-T" + "${ohos_root_path}device/board/gd32/components/ld/gd32f470xG_flash.ld",
     "-nostdlib",
   ]
+  if (build_xts) {
+    lib_dirs = [ "$root_out_dir/libs" ]
+    # hctest / acts_xts test modules rely on archive-level symbols that are
+    # only referenced from inside the archive itself (SYS_RUN pointers in
+    # .zinitcall.run2.init, LITE_TEST_SUIT initSuite pointers in
+    # .xts_init.<MODULE>, etc.). Without --whole-archive the linker won't
+    # pull any .o out of these archives and --gc-sections drops everything,
+    # so the SYS_RUN(StartXtsRunner) entry registered by hctest_service.c
+    # never makes it into .zinitcall.run2.init and nothing runs.
+    ldflags += [
+      "-Wl,--whole-archive",
+      "-lhctest",
+      "-lmodule_ActsBootstrapTest",
+      "-lmodule_ActsHieventLiteTest",
+      "-lmodule_ActsDfxFuncTest",
+      "-lmodule_ActsSamgrTest",
+      "-lhuks_test_common",
+      "-Wl,--no-whole-archive",
+    ]
+  }
 
   libs = [
     "nosys",

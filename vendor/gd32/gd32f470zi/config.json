@@ -23,7 +23,9 @@
         "subsystem": "hiviewdfx",
         "components": [
           { "component": "hievent_lite", "features":[] },
-          { "component": "hilog_lite", "features":[] }
+          { "component": "hilog_lite", "features":[] },
+          { "component": "blackbox_lite", "features":[] },
+          { "component": "hidumper_lite", "features":[] }
         ]
       },
       {
@@ -61,7 +63,26 @@
         "components": [
           { "component": "product_gd32f470zi", "features":[] }
         ]
-      }
+      },
+      {
+      "subsystem": "xts",
+      "components": [
+        {
+          "component": "acts",
+          "features": [
+            "enable_ohos_test_xts_acts_use_thirdparty_lwip = false"
+          ]
+        },
+        { "component": "tools", "features":[] },
+        { "component": "device_attest_lite", "features":[] }
+      ]
+    },
+    {
+      "subsystem": "developtools",
+      "components": [
+        { "component": "syscap_codec", "features":[] }
+      ]
+    }
     ],
     "third_party_dir": "",
     "product_adapter_dir": "//vendor/gd32/gd32f470zi/hals"

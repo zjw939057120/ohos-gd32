@@ -109,7 +109,7 @@ sudo python -m pip install build/hb
 sudo rm -rf device vendor
 
 # 解压项目源码到当前目录
-tar -zxvf ../ohos-gd32-OpenHarmony-7.0-Release.tar.gz
+unzip ../ohos-gd32-OpenHarmony-7.0-Release.zip
 
 ```
 
@@ -119,8 +119,10 @@ tar -zxvf ../ohos-gd32-OpenHarmony-7.0-Release.tar.gz
 # 选择产品配置
 make gd32f470zi_config
 
-# 编译
+# 编译构建
 make -j16
+# 编译构建XTS
+make -j16 build_xts=true
 
 ```
 

@@ -37,6 +37,29 @@ unsigned int LosShellInit(void);
  */
 extern void OHOS_SystemInit(void);
 
+
+/*
+ * core_main.h defines MODULE_INIT / MODULE_CALL / MODULE_BEGIN / MODULE_END
+ * (base/startup/bootstrap_lite/services/source/core_main.h). MODULE_INIT(...)
+ * expands to a do-while over five MODULE_CALL(name, step) invocations, and
+ * each MODULE_CALL references `extern __zinitcall_<name>_start/end` declared
+ * in MODULE_BEGIN/MODULE_END. Without the include the preprocessor leaves
+ * MODULE_INIT(app_service) as a plain function call and gcc reports
+ * "'app_service' undeclared (first use in this function)". system_init.c
+ * pulls core_main.h via a same-directory relative include; board/main.c
+ * must include it via the bootstrap include path that gn adds through
+ * board_include_dirs in liteos_m/config.gni.
+ *
+ * NOTE: core_main.h uses `InitCall` (typedef void (*InitCall)(void) from
+ * commonlibrary/utils_lite/include/ohos_init.h) but does NOT include
+ * ohos_init.h itself -- system_init.c gets it for free because it #includes
+ * <ohos_init.h> before core_main.h. board/main.c must include both, in that
+ * order: <ohos_init.h> first to introduce the typedef, then "core_main.h"
+ * which uses it.
+ */
+#include <ohos_init.h>
+#include "core_main.h"
+
 void init_hw(void)
 {
     // 初始化 TLC2543 SPI 通信
@@ -107,6 +130,10 @@ LITE_OS_SEC_TEXT_INIT int main(void)
     }
 #endif
 
+    // 初始化应用服务
+    MODULE_INIT(app_service);
+    // 初始化应用特征
+    MODULE_INIT(app_feature);
     /* Start OHOS auto-init (runs SYS_RUN app entries, e.g. the LED blink). */
     OHOS_SystemInit();
 

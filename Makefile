@@ -1,10 +1,12 @@
 CONFIG_MK = config.mk
 -include ${CONFIG_MK}
 
+build_xts ?= false
+
 all:
 	@if [ "${TARGET}" == "" -o "${TARGET_DIR}" == "" -o "${OUT_ELF}" == "" -o "${TARGET_HEX}" == "" -o "${TARGET_BIN}" == "" ]; then echo "** please make <xxx_config> first **" && exit 1; fi
 	@make clean \
-	&& hb build -f --gn-flags="--export-compile-commands" \
+	&& hb build -f --gn-flags="--export-compile-commands" --gn-args build_xts=$(build_xts)\
 	&& mkdir -p ${TARGET_DIR} \
 	&& arm-none-eabi-size ${OUT_ELF} \
 	&& arm-none-eabi-objdump -D ${OUT_ELF} > ${OUT_DIS} \
