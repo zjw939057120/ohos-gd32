@@ -35,9 +35,15 @@ VOID watchdog_task(VOID)
     {
         /* 刷新看门狗计数器 */
         fwdgt_counter_reload();
-        /* 闪烁LED */
-		gpio_toggle(RUNSTA_LED_INDEX);
-        LOS_TaskDelay(1000);
+        /*心跳LED*/
+		led_on(RUNSTA_LED_INDEX);
+        LOS_TaskDelay(200);
+		led_off(RUNSTA_LED_INDEX);
+        LOS_TaskDelay(150);
+		led_on(RUNSTA_LED_INDEX);
+        LOS_TaskDelay(200);
+		led_off(RUNSTA_LED_INDEX);
+        LOS_TaskDelay(800);
     }
 }
 
@@ -50,8 +56,8 @@ void init_watchdog(void)
     while(SUCCESS != rcu_osci_stab_wait(RCU_IRC32K)){
     }
 
-    /* confiure FWDGT counter clock: 2500 * 64 / 32000 = 5s */
-    fwdgt_config(2500, FWDGT_PSC_DIV64);
+    /* confiure FWDGT counter clock: 2500 * 128 / 32000 = 10s */
+    fwdgt_config(2500, FWDGT_PSC_DIV128);
     
     fwdgt_enable();
 

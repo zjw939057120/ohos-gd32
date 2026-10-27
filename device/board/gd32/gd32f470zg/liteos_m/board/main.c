@@ -114,6 +114,9 @@ LITE_OS_SEC_TEXT_INIT int main(void)
 #endif
     // 初始化硬件中断
     init_hwi();
+        
+  /*禁用XTS*/
+#if BUILD_XTS != 1
     // 初始化LITTLEFS
 #if (LOSCFG_SUPPORT_LITTLEFS == 1)
     lfs_init();
@@ -121,6 +124,7 @@ LITE_OS_SEC_TEXT_INIT int main(void)
     // 初始化以太网
 #if (LOSCFG_NET_LWIP == 1)
     enet_adapter_init(NULL);
+#endif
 #endif
     // 初始化Shell
 #if (LOSCFG_USE_SHELL == 1)
