@@ -11,7 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-const.build.characteristics=****
+const.product.devicetype=Lighting Drive
+
+const.build.characteristics=Lighting Drive
 
 const.product.manufacturer=Shanghai Yuankong
 
@@ -35,6 +37,6 @@ const.product.bootloader.version=bootloader
 
 const.product.cpu.abilist=arm-none-eabi
 
-const.product.software.version=OpenHarmony-7.0
+const.product.software.version=2.0.0.1
 
 const.product.firstapiversion=1

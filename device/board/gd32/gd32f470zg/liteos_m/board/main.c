@@ -114,13 +114,14 @@ LITE_OS_SEC_TEXT_INIT int main(void)
 #endif
     // 初始化硬件中断
     init_hwi();
-        
-  /*禁用XTS*/
-#if BUILD_XTS != 1
+
     // 初始化LITTLEFS
 #if (LOSCFG_SUPPORT_LITTLEFS == 1)
     lfs_init();
 #endif
+        
+  /*禁用XTS*/
+#if BUILD_XTS != 1
     // 初始化以太网
 #if (LOSCFG_NET_LWIP == 1)
     enet_adapter_init(NULL);
@@ -134,6 +135,10 @@ LITE_OS_SEC_TEXT_INIT int main(void)
     }
 #endif
 
+    // 初始化SAMGR
+    SAMGR_Bootstrap();
+    // 初始化参数服务
+    LiteParamService();
     // 初始化应用服务
     MODULE_INIT(app_service);
     // 初始化应用特征

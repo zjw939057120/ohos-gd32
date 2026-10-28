@@ -15,9 +15,42 @@
 
 #include "hal_sys_param.h"
 
-static const char OHOS_SERIAL[] = {"1234567890"};  // provided by OEM.
+#include <stdint.h>
 
-const char* HalGetSerial(void)
+// GD32F470 唯一设备ID的基地址
+#ifndef GD32_UNIQUE_ID_BASE
+#define GD32_UNIQUE_ID_BASE 0x1FFF7A10
+#endif
+
+/* 96 位 UID = 12 字节，转成十六进制字符串需要 24 个字符 + 1 个 '\0' */
+#define UID_SERIAL_LEN 24
+
+static char g_uid_serial[UID_SERIAL_LEN + 1] = {0};
+
+static void uid_to_serial(void)
 {
-    return OHOS_SERIAL;
+    const uint8_t *uid_ptr = (const uint8_t *)GD32_UNIQUE_ID_BASE;
+
+    /* 把 12 字节 UID 转成 24 位十六进制字符串 */
+    for (int i = 0; i < 12; i++) {
+        uint8_t high = (uid_ptr[i] >> 4) & 0x0F;
+        uint8_t low  = uid_ptr[i] & 0x0F;
+
+        g_uid_serial[i * 2]     = (high < 10) ? ('0' + high) : ('A' + high - 10);
+        g_uid_serial[i * 2 + 1] = (low  < 10) ? ('0' + low)  : ('A' + low  - 10);
+    }
+
+    g_uid_serial[UID_SERIAL_LEN] = '\0';
+}
+
+const char *HalGetSerial(void)
+{
+    static int inited = 0;
+
+    if (!inited) {
+        uid_to_serial();
+        inited = 1;
+    }
+
+    return g_uid_serial;
 }
