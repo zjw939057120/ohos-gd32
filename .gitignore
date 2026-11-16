@@ -44,7 +44,8 @@ third/_party
 /device/soc/winnermicro
 /kernel
 /qemu-run
-!/vendor/GigaDevice
+/vendor/default
+!/vendor/gd32
 /vendor/bearpi
 /vendor/chipsea
 /vendor/hihope

@@ -11,23 +11,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-const.product.devicetype=Lighting Drive
+const.product.devicetype=Smart Gateway
 
-const.build.characteristics=Lighting Drive
+const.build.characteristics=Smart Gateway
 
-const.product.manufacturer=Shanghai Yuankong
+const.product.manufacturer=ShanghaiYuankong
 
 const.product.brand=YUKON
 
-const.product.name=Intelligent lighting controller
+const.product.name=Energy Saving Controller
 
-const.build.product=ECS-7000MZM
+const.build.product=YKEMC
 
-const.product.hardwareversion=YK-ZM12-V2.0.1
+const.product.hardwareversion=YK-BA6301CV2_0_2
 
-const.product.model=YUKON
+const.product.model=YKEMC-M01
 
-const.software.model=ECS-7000MZM
+const.software.model=YKEMC-M01
 
 const.product.hardwareprofile="aout:true,display:false"
 
