@@ -15,6 +15,6 @@ if SOC_GD32F470VG
 
 endif
 
-if SOC_GD32F470ZE
+if SOC_GD32F470ZI
 
 endif

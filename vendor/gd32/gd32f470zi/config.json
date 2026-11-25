@@ -1,10 +1,10 @@
 {
-    "product_name": "gd32f470ze",
+    "product_name": "gd32f470zi",
     "ohos_version": "OpenHarmony 7.0",
     "type":"mini",
     "version": "3.0",
     "device_company": "gd32",
-    "board": "gd32f470ze",
+    "board": "gd32f470zi",
     "kernel_type": "liteos_m",
     "kernel_version": "7.0.0",
     "subsystems": [
@@ -51,12 +51,12 @@
         ]
       },
       {
-        "subsystem": "product_gd32f470ze",
+        "subsystem": "product_gd32f470zi",
         "components": [
-          { "component": "product_gd32f470ze", "features":[] }
+          { "component": "product_gd32f470zi", "features":[] }
         ]
       }
     ],
     "third_party_dir": "",
-    "product_adapter_dir": "//vendor/gd32/gd32f470ze/hals"
+    "product_adapter_dir": "//vendor/gd32/gd32f470zi/hals"
   }

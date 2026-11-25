@@ -18,7 +18,7 @@
 
 #include "gd32f4xx.h"
 
-/* GD32F470ZE system clock: 240MHz from 8MHz HXTAL
+/* GD32F470ZI system clock: 240MHz from 8MHz HXTAL
  * (system_clock_240m_8m_hxtal in system_gd32f4xx.c) */
 #define SYSCLK_FREQ        240000000
 

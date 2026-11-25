@@ -17,7 +17,7 @@
  */
 
 /*
- * GD32F470ZE (Cortex-M4) startup for OpenHarmony LiteOS-M.
+ * GD32F470ZI (Cortex-M4) startup for OpenHarmony LiteOS-M.
  *
  * Transcribed to GNU as syntax from the GigaDevice CMSIS
  * startup_gd32f450_470.S (V3.3.2, firmware for GD32F4xx), with LiteOS-M

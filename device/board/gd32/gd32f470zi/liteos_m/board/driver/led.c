@@ -14,7 +14,7 @@
  */
 
 /*
- * LED GPIO driver for GD32F470ZE.
+ * LED GPIO driver for GD32F470ZI.
  * LED1 on PA8, LED2 on PE3, both active high (high level = LED on).
  * Push-pull output, no pull-up/down, 50MHz drive. LEDs start off.
  */

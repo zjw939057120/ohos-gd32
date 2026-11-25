@@ -14,7 +14,7 @@
  */
 
 /*
- * Stub file-system HAL for GD32F470ZE.
+ * Stub file-system HAL for GD32F470ZI.
  *
  * This board has no on-board file system (storage_type is empty in the product
  * config), so there is nowhere to persist data. The OHOS parameter service

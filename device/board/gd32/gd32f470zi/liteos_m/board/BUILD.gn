@@ -12,7 +12,7 @@
 # limitations under the License.
 
 # Board support: startup, linker, console UART, main and printf.
-# The application lives under vendor/gd32/gd32f470ze/applications and is started
+# The application lives under vendor/gd32/gd32f470zi/applications and is started
 # via the OHOS bootstrap (OHOS_SystemInit -> SYS_RUN), not compiled here.
 # The GD32F4xx SoC (CMSIS + peripheral library, system_gd32f4xx) lives under
 # device/soc/gd32/gd32f4 and is pulled in as a kernel dependency; its header
@@ -51,7 +51,7 @@ config("public") {
 
   ldflags = [
     "-nostartfiles",
-    "-Wl,-T" + rebase_path("gd32f470xE_flash.ld"),
+    "-Wl,-T" + rebase_path("gd32f470xI_flash.ld"),
     "-nostdlib",
   ]
 

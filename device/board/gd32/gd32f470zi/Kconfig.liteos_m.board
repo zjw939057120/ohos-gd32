@@ -11,6 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-group("gd32f470ze") {
-  deps = [ "applications:applications" ]
-}
+config BOARD_GD32F470ZI
+    bool "gd32f470zi"
+    depends on SOC_GD32F470ZI
+    help
+        GD32F470ZI board.

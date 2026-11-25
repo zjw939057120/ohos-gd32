@@ -26,7 +26,7 @@
 /*=============================================================================
                                         System clock module configuration
 =============================================================================*/
-/* GD32F470ZE runs at 240MHz from 8MHz HXTAL (system_clock_240m_8m_hxtal) */
+/* GD32F470ZI runs at 240MHz from 8MHz HXTAL (system_clock_240m_8m_hxtal) */
 #define OS_SYS_CLOCK                                        SYSCLK_FREQ
 #define LOSCFG_BASE_CORE_TICK_PER_SECOND                    (1000UL)
 #define LOSCFG_BASE_CORE_TICK_HW_TIME                       0

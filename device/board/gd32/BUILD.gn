@@ -16,7 +16,7 @@ if (ohos_kernel_type == "liteos_m") {
   module_name = get_path_info(rebase_path("."), "name")
   module_group(module_name) {
     # board_name is the product's selected board (from vendor config.json),
-    # e.g. "gd32f470vg" or "gd32f470ze". Only the selected board subdir is built.
+    # e.g. "gd32f470vg" or "gd32f470zi". Only the selected board subdir is built.
     modules = [ board_name ]
   }
 }

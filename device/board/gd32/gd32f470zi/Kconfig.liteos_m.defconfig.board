@@ -11,8 +11,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-config BOARD_GD32F470ZE
-    bool "gd32f470ze"
-    depends on SOC_GD32F470ZE
-    help
-        GD32F470ZE board.
+if BOARD_GD32F470ZI
+
+endif
