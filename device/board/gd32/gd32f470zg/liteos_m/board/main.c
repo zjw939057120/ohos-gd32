@@ -18,8 +18,15 @@
 #include "uart.h"
 #include "los_debug.h"
 
-unsigned int LosAppInit(VOID);
-extern unsigned int LosShellInit(void);
+unsigned int LosShellInit(void);
+
+/*
+ * OHOS bootstrap entry. Traverses the .zinitcall.* init tables (CORE_INIT,
+ * SYS_SERVICE_INIT, SYS_RUN, ...) so vendor/application code registered via
+ * those macros starts automatically. Declared here because system_init.c
+ * does not expose a public header for it.
+ */
+extern void OHOS_SystemInit(void);
 
 /*****************************************************************************
  Function    : main
@@ -49,10 +56,8 @@ LITE_OS_SEC_TEXT_INIT int main(void)
     }
 #endif
 
-    ret = LosAppInit();
-    if (ret != LOS_OK) {
-        printf("LosAppInit failed! ERROR: 0x%x\n", ret);
-    }
+    /* Start OHOS auto-init (runs SYS_RUN app entries, e.g. the LED blink). */
+    OHOS_SystemInit();
 
     LOS_Start();
 

@@ -11,8 +11,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-config BOARD_GD32F470VG
-    bool "gd32f470vg"
-    depends on SOC_GD32F470VG
-    help
-        GD32F470VG board.
+group("gd32f470zg") {
+  deps = [ "applications:applications" ]
+}
