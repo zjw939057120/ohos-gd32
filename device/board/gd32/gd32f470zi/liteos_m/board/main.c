@@ -17,6 +17,8 @@
 #include "los_config.h"
 #include "uart.h"
 #include "los_debug.h"
+#include <ohos_init.h>
+#include "core_main.h"
 
 unsigned int LosShellInit(void);
 
@@ -56,6 +58,12 @@ LITE_OS_SEC_TEXT_INIT int main(void)
     }
 #endif
 
+    // 初始化参数服务
+    LiteParamService();
+    // 初始化应用服务
+    MODULE_INIT(app_service);
+    // 初始化应用特征
+    MODULE_INIT(app_feature);
     /* Start OHOS auto-init (runs SYS_RUN app entries, e.g. the LED blink). */
     OHOS_SystemInit();
 

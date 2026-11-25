@@ -51,6 +51,23 @@ config("public") {
     "-nostdlib",
   ]
 
+  if (build_xts) {
+    lib_dirs = [ "$root_out_dir/libs" ]
+    ldflags += [
+      "-Wl,--whole-archive",
+      "-lbroadcast",
+      "-lhctest",
+      "-lmodule_ActsBootstrapTest",
+      "-lmodule_ActsHieventLiteTest",
+      "-lmodule_ActsDfxFuncTest",
+      "-lmodule_ActsParameterTest",
+      "-lmodule_ActsSamgrTest",
+      "-lhuks_test_common",
+      "-Wl,--no-whole-archive",
+    ]
+    defines = [ "BUILD_XTS=1" ]
+  }
+
   libs = [
     "nosys",
     "gcc",

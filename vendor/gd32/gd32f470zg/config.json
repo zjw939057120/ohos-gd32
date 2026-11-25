@@ -55,7 +55,20 @@
         "components": [
           { "component": "product_gd32f470zg", "features":[] }
         ]
-      }
+      },
+      {
+      "subsystem": "xts",
+      "components": [
+        {
+          "component": "acts",
+          "features": [
+            "enable_ohos_test_xts_acts_use_thirdparty_lwip = false"
+          ]
+        },
+        { "component": "tools", "features":[] },
+        { "component": "device_attest_lite", "features":[] }
+      ]
+    }
     ],
     "third_party_dir": "",
     "product_adapter_dir": "//vendor/gd32/gd32f470zg/hals"
