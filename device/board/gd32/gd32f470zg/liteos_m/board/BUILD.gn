@@ -27,16 +27,13 @@ kernel_module(module_name) {
 
   sources = [
     "main.c",
-    "startup_gd32f450_470.S",
-    "driver/uart.c",
-    "driver/led.c",
+    "${ohos_root_path}device/board/gd32/components/startup/startup_gd32f450_470.S",
     "libc/dprintf.c",
   ]
 
   include_dirs = [
     ".",
     "include",
-    "driver",
     "libc",
   ]
 }
@@ -45,13 +42,12 @@ config("public") {
   include_dirs = [
     ".",
     "include",
-    "driver",
     "libc",
   ]
 
   ldflags = [
     "-nostartfiles",
-    "-Wl,-T" + rebase_path("gd32f470xG_flash.ld"),
+    "-Wl,-T" + rebase_path("${ohos_root_path}device/board/gd32/components/lds/gd32f470xG_flash.ld"),
     "-nostdlib",
   ]
 

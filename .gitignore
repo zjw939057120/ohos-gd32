@@ -13,6 +13,8 @@ third_party
 base
 build.py
 commonlibrary
+compile_commands.json
+config.mk
 device/board/hihope
 device/board/hisilicon
 device/board/revoview
@@ -27,3 +29,4 @@ vendor/hihope
 vendor/hisilicon
 vendor/ohemu
 vendor/revoview
+
