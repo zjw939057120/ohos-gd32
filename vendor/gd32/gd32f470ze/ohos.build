@@ -1,0 +1,10 @@
+{
+  "parts": {
+    "product_gd32f470ze": {
+      "module_list": [
+        "//vendor/gd32/gd32f470ze:gd32f470ze"
+      ]
+    }
+  },
+  "subsystem": "product_gd32f470ze"
+}
