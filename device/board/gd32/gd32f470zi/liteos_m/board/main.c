@@ -30,6 +30,19 @@ unsigned int LosShellInit(void);
  */
 extern void OHOS_SystemInit(void);
 
+void HwInit(void){
+#if (LOSCFG_USE_SHELL == 1)
+    UartInit();
+#endif
+}
+
+void HwInitAfter(void){
+    RtcInit();
+#if (LOSCFG_USE_SHELL == 1)
+    Uart0RxIrqRegister();
+#endif
+}
+
 /*****************************************************************************
  Function    : main
  Description : Main function entry
@@ -41,15 +54,14 @@ LITE_OS_SEC_TEXT_INIT int main(void)
 {
     unsigned int ret;
 
-    UartInit();
+    HwInit();
 
     ret = LOS_KernelInit();
     if (ret != LOS_OK) {
         printf("LiteOS kernel init failed! ERROR: 0x%x\n", ret);
         goto EXIT;
     }
-
-    Uart0RxIrqRegister();
+    HwInitAfter();
 
 #if (LOSCFG_USE_SHELL == 1)
     ret = LosShellInit();

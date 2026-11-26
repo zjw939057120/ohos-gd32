@@ -20,7 +20,6 @@
  */
 
 #include "led.h"
-#include "board.h"
 
 /* LED1: PA8, LED2: PE3 */
 #define LED1_PORT           GPIOA

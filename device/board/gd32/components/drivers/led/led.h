@@ -17,6 +17,7 @@
 #define _LED_H
 
 #include "los_compiler.h"
+#include "board.h"
 
 #ifdef __cplusplus
 #if __cplusplus

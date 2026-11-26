@@ -18,6 +18,7 @@
 
 #include "los_event.h"
 #include "los_compiler.h"
+#include "board.h"
 
 #ifdef __cplusplus
 #if __cplusplus

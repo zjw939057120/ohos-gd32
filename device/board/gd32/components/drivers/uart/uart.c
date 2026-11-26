@@ -21,7 +21,6 @@
  */
 
 #include "uart.h"
-#include "board.h"
 #include "los_interrupt.h"
 #include "los_event.h"
 
