@@ -17,7 +17,7 @@
 # subdirectories to deps below.
 group("applications") {
   deps = [
-    "led:led_app",
+    #"led:led_app",
     "helloworld:helloworld",
   ]
 }

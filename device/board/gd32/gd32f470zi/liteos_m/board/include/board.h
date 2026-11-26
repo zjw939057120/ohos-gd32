@@ -18,8 +18,4 @@
 
 #include "gd32f4xx.h"
 
-/* Debug console on USART0 (PA9 TX / PA10 RX) */
-#define UART0_BAUDRATE     115200
-#define Uart0_Rx_IRQn      USART0_IRQn
-
 #endif /* _BOARD_H */

@@ -31,56 +31,84 @@ extern "C" {
 #endif
 #endif
 
-/* USART0 TX/RX pins on GPIOA, alternate function 7 */
-#define UART0_TX_PIN        GPIO_PIN_9
-#define UART0_RX_PIN        GPIO_PIN_10
-#define UART0_GPIO_AF       GPIO_AF_7
+/* Debug console on USART0 (PA9 TX / PA10 RX) */
+#define CONSOLE_UART                         USART0
+#define CONSOLE_UART_RCU                     RCU_USART0
+#define CONSOLE_UART_IRQ                     USART0_IRQn
+#define CONSOLE_UART_BAUD                    (115200U)
+
+#define CONSOLE_UART_GPIO_RCU                RCU_GPIOA
+#define CONSOLE_UART_PORT                    GPIOA
+#define CONSOLE_UART_TX_PIN                  GPIO_PIN_9
+#define CONSOLE_UART_RX_PIN                  GPIO_PIN_10
+#define CONSOLE_UART_AF                      GPIO_AF_7
 
 /* g_shellInputEvent is defined by the kernel shell (components/shell/src/base/shmsg.c);
  * it is declared extern in uart.h and signalled from the USART0 RX interrupt. */
 
+#if (LOSCFG_USE_SHELL == 1)
+#define RX_BUF_SIZE                     128
+static uint8_t rx_buf[RX_BUF_SIZE];
+static uint16_t tx_index;
+static uint16_t rx_index;
+
 INT32 UartGetc(VOID)
 {
-    if (RESET == usart_flag_get(USART0, USART_FLAG_RBNE)) {
-        return 0;
+    uint8_t c = 0;
+    if (tx_index != rx_index) {
+        c = rx_buf[tx_index++];
+        tx_index %= RX_BUF_SIZE;     
     }
-    return (INT32)(usart_data_receive(USART0) & 0xFF);
+    return c;
 }
+#endif
 
 INT32 UartPutc(INT32 c, VOID *file)
 {
     (void)file;
     /* wait until the transmit data buffer is empty */
-    while (RESET == usart_flag_get(USART0, USART_FLAG_TBE)) {
+    while (RESET == usart_flag_get(CONSOLE_UART, USART_FLAG_TBE)) {
     }
-    usart_data_transmit(USART0, (uint16_t)(c & 0xFF));
+    usart_data_transmit(CONSOLE_UART, (uint16_t)(c & 0xFF));
     return c;
 }
 
+
 VOID UartReceiveHandler(VOID)
 {
-    if (RESET != usart_interrupt_flag_get(USART0, USART_INT_FLAG_RBNE)) {
+    if(usart_flag_get(CONSOLE_UART, USART_FLAG_RBNE) != RESET)    //判断是否接收中断标志位置位
+    {      
+        usart_flag_clear(CONSOLE_UART, USART_FLAG_RBNE);
+        uint8_t c = usart_data_receive(CONSOLE_UART);    //将接收到的数据存入buf    
+#if (LOSCFG_USE_SHELL == 1)
+        rx_buf[rx_index++] = c;
+        rx_index %= RX_BUF_SIZE;
+        if (rx_index == tx_index) {
+            tx_index++;
+            tx_index %= RX_BUF_SIZE;
+        }
         (void)LOS_EventWrite(&g_shellInputEvent, 0x1);
+#endif
     }
 }
 
 VOID UartInit(VOID)
 {
     /* enable GPIOA and USART0 clocks */
-    rcu_periph_clock_enable(RCU_GPIOA);
-    rcu_periph_clock_enable(RCU_USART0);
+    rcu_periph_clock_enable(CONSOLE_UART_GPIO_RCU);
+    rcu_periph_clock_enable(CONSOLE_UART_RCU);
 
     /* PA9 / PA10 -> AF7 (USART0_TX / USART0_RX) */
-    gpio_af_set(GPIOA, UART0_GPIO_AF, UART0_TX_PIN | UART0_RX_PIN);
-    gpio_mode_set(GPIOA, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART0_TX_PIN | UART0_RX_PIN);
-    gpio_output_options_set(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, UART0_TX_PIN | UART0_RX_PIN);
+    gpio_af_set(CONSOLE_UART_PORT, CONSOLE_UART_AF, CONSOLE_UART_TX_PIN | CONSOLE_UART_RX_PIN);
+    gpio_mode_set(CONSOLE_UART_PORT, GPIO_MODE_AF, GPIO_PUPD_PULLUP, CONSOLE_UART_TX_PIN | CONSOLE_UART_RX_PIN);
+    gpio_output_options_set(CONSOLE_UART_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, CONSOLE_UART_TX_PIN | CONSOLE_UART_RX_PIN);
 
     /* USART0: 115200 8N1, default word length / stop bit */
-    usart_deinit(USART0);
-    usart_baudrate_set(USART0, UART0_BAUDRATE);
-    usart_receive_config(USART0, USART_RECEIVE_ENABLE);
-    usart_transmit_config(USART0, USART_TRANSMIT_ENABLE);
-    usart_enable(USART0);
+    usart_deinit(CONSOLE_UART);
+    usart_baudrate_set(CONSOLE_UART, CONSOLE_UART_BAUD);
+    usart_receive_config(CONSOLE_UART, USART_RECEIVE_ENABLE);
+    usart_transmit_config(CONSOLE_UART, USART_TRANSMIT_ENABLE);
+    usart_enable(CONSOLE_UART);
 
     /* g_shellInputEvent is initialized by the shell (shmsg.c) during LosShellInit. */
 }
@@ -89,7 +117,7 @@ VOID Uart0RxIrqRegister(VOID)
 {
     /* NVIC + USART0 RBNE interrupt, then hook the LiteOS-M HWI */
     nvic_irq_enable(USART0_IRQn, 0, 0);
-    usart_interrupt_enable(USART0, USART_INT_RBNE);
+    usart_interrupt_enable(CONSOLE_UART, USART_INT_RBNE);
     (void)LOS_HwiCreate(USART0_IRQn, 0, 0, (HWI_PROC_FUNC)UartReceiveHandler, 0);
 }
 
