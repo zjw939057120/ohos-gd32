@@ -27,7 +27,7 @@
 #define LED2_PORT           GPIOE
 #define LED2_PIN            GPIO_PIN_3
 
-VOID LedInit(VOID)
+void LedInit(void)
 {
     /* enable GPIOA and GPIOE clocks */
     rcu_periph_clock_enable(RCU_GPIOA);
@@ -44,19 +44,19 @@ VOID LedInit(VOID)
     gpio_bit_reset(LED2_PORT, LED2_PIN);
 }
 
-VOID LedOn(VOID)
+void LedOn(void)
 {
     gpio_bit_set(LED1_PORT, LED1_PIN);
     gpio_bit_set(LED2_PORT, LED2_PIN);
 }
 
-VOID LedOff(VOID)
+void LedOff(void)
 {
     gpio_bit_reset(LED1_PORT, LED1_PIN);
     gpio_bit_reset(LED2_PORT, LED2_PIN);
 }
 
-VOID LedToggle(VOID)
+void LedToggle(void)
 {
     gpio_bit_toggle(LED1_PORT, LED1_PIN);
     gpio_bit_toggle(LED2_PORT, LED2_PIN);

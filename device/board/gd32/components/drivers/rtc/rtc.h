@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef _RTC_H
-#define _RTC_H
+#ifndef __RTC_H
+#define __RTC_H
 
 #include "los_compiler.h"
 #include "board.h"
@@ -31,7 +31,7 @@ extern "C" {
 #define DEC2BCD(dec)    ( (((dec) / 10) << 4) | ((dec) % 10) )
 
 int RtcInit(void);
-void rtc_setup(uint16_t year, uint8_t date, uint8_t month, uint8_t hour, uint8_t minute, uint8_t second);
+void rtc_setup(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t minute, uint8_t second);
 void SetSysTime(void);
 void parse_compile_time(uint16_t *year, uint8_t *month, uint8_t *day, 
                         uint8_t *hour, uint8_t *minute, uint8_t *second);

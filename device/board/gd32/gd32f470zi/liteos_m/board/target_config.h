@@ -20,8 +20,8 @@
 #include "board.h"
 #include "stdbool.h"
 
-#ifndef _TARGET_CONFIG_H
-#define _TARGET_CONFIG_H
+#ifndef __TARGET_CONFIG_H
+#define __TARGET_CONFIG_H
 
 /*=============================================================================
                                         System clock module configuration
@@ -90,11 +90,5 @@ extern unsigned int __heap_size;
 #define LOSCFG_KERNEL_PRINTF                                1
 
 #define LOS_KERNEL_TEST_NOT_SMOKE                           0
-
-/*=============================================================================
-                                       shell module configuration
-=============================================================================*/
-#define LOSCFG_USE_SHELL                                    1
-#define LOSCFG_SHELL_PRIO                                   3
 
 #endif /* _TARGET_CONFIG_H */

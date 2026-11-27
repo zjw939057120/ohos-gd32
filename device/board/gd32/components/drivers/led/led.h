@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef _LED_H
-#define _LED_H
+#ifndef __LED_H
+#define __LED_H
 
 #include "los_compiler.h"
 #include "board.h"
@@ -30,10 +30,10 @@ extern "C" {
  *   LED1 -> PA8
  *   LED2 -> PE3
  */
-extern VOID LedInit(VOID);
-extern VOID LedOn(VOID);
-extern VOID LedOff(VOID);
-extern VOID LedToggle(VOID);
+extern void LedInit(void);
+extern void LedOn(void);
+extern void LedOff(void);
+extern void LedToggle(void);
 
 #ifdef __cplusplus
 #if __cplusplus

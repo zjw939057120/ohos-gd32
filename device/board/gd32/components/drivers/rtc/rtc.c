@@ -102,7 +102,7 @@ void rtc_pre_config(void)
     \param[out] none
     \retval     none
 */
-void rtc_setup(uint16_t year, uint8_t date, uint8_t month, uint8_t hour, uint8_t minute, uint8_t second)
+void rtc_setup(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t minute, uint8_t second)
 {
     /* setup RTC time value */
     rtc_initpara.factor_asyn = prescaler_a;

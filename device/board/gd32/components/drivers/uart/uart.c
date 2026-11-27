@@ -30,11 +30,11 @@ extern "C" {
 #endif
 #endif
 
-/* Debug console on USART0 (PA9 TX / PA10 RX) */
+/* USART TX/RX pins on GPIOA, alternate function 7 */
 #define CONSOLE_UART                         USART0
 #define CONSOLE_UART_RCU                     RCU_USART0
 #define CONSOLE_UART_IRQ                     USART0_IRQn
-#define CONSOLE_UART_BAUD                    (115200U)
+#define CONSOLE_UART_BAUD                    (9600U)
 
 #define CONSOLE_UART_GPIO_RCU                RCU_GPIOA
 #define CONSOLE_UART_PORT                    GPIOA
@@ -51,7 +51,7 @@ static uint8_t rx_buf[RX_BUF_SIZE];
 static uint16_t tx_index;
 static uint16_t rx_index;
 
-INT32 UartGetc(VOID)
+int32_t UartGetc(void)
 {
     uint8_t c = 0;
     if (tx_index != rx_index) {
@@ -62,7 +62,7 @@ INT32 UartGetc(VOID)
 }
 #endif
 
-INT32 UartPutc(INT32 c, VOID *file)
+int32_t UartPutc(int32_t c, void *file)
 {
     (void)file;
     /* wait until the transmit data buffer is empty */
@@ -73,7 +73,7 @@ INT32 UartPutc(INT32 c, VOID *file)
 }
 
 
-VOID UartReceiveHandler(VOID)
+void UartReceiveHandler(void)
 {
     if(usart_flag_get(CONSOLE_UART, USART_FLAG_RBNE) != RESET)    //判断是否接收中断标志位置位
     {      
@@ -91,7 +91,7 @@ VOID UartReceiveHandler(VOID)
     }
 }
 
-VOID UartInit(VOID)
+void UartInit(void)
 {
     /* enable GPIOA and USART0 clocks */
     rcu_periph_clock_enable(CONSOLE_UART_GPIO_RCU);
@@ -112,12 +112,12 @@ VOID UartInit(VOID)
     /* g_shellInputEvent is initialized by the shell (shmsg.c) during LosShellInit. */
 }
 
-VOID Uart0RxIrqRegister(VOID)
+void UartRxIrqRegister(void)
 {
     /* NVIC + USART0 RBNE interrupt, then hook the LiteOS-M HWI */
-    nvic_irq_enable(USART0_IRQn, 0, 0);
+    nvic_irq_enable(CONSOLE_UART_IRQ, 0, 0);
     usart_interrupt_enable(CONSOLE_UART, USART_INT_RBNE);
-    (void)LOS_HwiCreate(USART0_IRQn, 0, 0, (HWI_PROC_FUNC)UartReceiveHandler, 0);
+    (void)LOS_HwiCreate(CONSOLE_UART_IRQ, 0, 0, (HWI_PROC_FUNC)UartReceiveHandler, 0);
 }
 
 #ifdef __cplusplus

@@ -33,13 +33,18 @@ extern void OHOS_SystemInit(void);
 void HwInit(void){
 #if (LOSCFG_USE_SHELL == 1)
     UartInit();
+#else
+    Rs485EnInit();
+    Rs485Init();
 #endif
 }
 
 void HwInitAfter(void){
     RtcInit();
 #if (LOSCFG_USE_SHELL == 1)
-    Uart0RxIrqRegister();
+    UartRxIrqRegister();
+#else
+    Rs485RxIrqRegister();
 #endif
 }
 

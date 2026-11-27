@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef _UART_H
-#define _UART_H
+#ifndef __UART_H
+#define __UART_H
 
 #include "los_event.h"
 #include "los_compiler.h"
@@ -26,10 +26,10 @@ extern "C" {
 #endif
 #endif
 
-extern VOID UartInit(VOID);
-extern INT32 UartPutc(INT32 c, VOID *file);
-extern INT32 UartGetc(VOID);
-extern VOID Uart0RxIrqRegister(VOID);
+extern void UartInit(void);
+extern int32_t UartPutc(int32_t c, void *file);
+extern int32_t UartGetc(void);
+extern void UartRxIrqRegister(void);
 
 extern EVENT_CB_S g_shellInputEvent;
 

@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include "securec.h"
 #include "uart.h"
+#include "rs485.h"
 #include "los_debug.h"
 #include "los_interrupt.h"
 
@@ -39,10 +40,14 @@ int printf(char const *fmt, ...)
     va_start(ap, fmt);
     int len = vsnprintf_s(buf, sizeof(buf), BUFSIZE - 1, fmt, ap);
     va_end(ap);
+#if (LOSCFG_USE_SHELL == 1)
     if (len > 0) {
         dputs(buf, UartPutc, 0);
     } else {
         dputs("printf error!\n", UartPutc, 0);
     }
+#else
+    Rs485Puts(buf);
+#endif
     return len;
 }

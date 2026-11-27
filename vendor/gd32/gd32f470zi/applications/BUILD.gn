@@ -18,6 +18,6 @@
 group("applications") {
   deps = [
     #"led:led_app",
-    "helloworld:helloworld",
+    #"helloworld:helloworld",
   ]
 }

@@ -18,7 +18,8 @@ if (ohos_kernel_type == "liteos_m") {
     modules = [
       "rtc",
       "led",
-      "uart"
+      "uart",
+      "rs485"
      ]
   }
 }

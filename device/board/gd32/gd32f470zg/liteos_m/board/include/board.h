@@ -13,9 +13,12 @@
  * limitations under the License.
  */
 
-#ifndef _BOARD_H
-#define _BOARD_H
+#ifndef __BOARD_H
+#define __BOARD_H
 
 #include "gd32f4xx.h"
+#include "gd32f4xx_libopt.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #endif /* _BOARD_H */
